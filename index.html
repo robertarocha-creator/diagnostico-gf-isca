@@ -16,7 +16,7 @@
     --text:#2C2C2A; --muted:#002D72; --bg:#F5F8FD; --border:#E5EDF7; --border-strong:#D6E1F0;
     --shadow-sm:0 1px 2px rgba(0,45,114,.04), 0 2px 8px rgba(0,45,114,.05);
     --shadow-md:0 2px 4px rgba(0,45,114,.05), 0 8px 24px rgba(0,45,114,.08);
-    --radius-lg:20px; --radius-md:16px; --radius-sm:12px;
+    --radius-lg:20px; --radius-md:16px; --radius-sm:12px; --radius-form:15px;
     --green:#0e8b52;
   }
   *{box-sizing:border-box;}
@@ -125,6 +125,9 @@
   .lead-gate-success i{color:var(--blue);font-size:20px;}
   .lead-gate-error-wrap{padding:8px 0;}
   .lead-gate-error{color:var(--navy);font-size:14px;line-height:1.6;margin:0 0 18px;}
+  /* Botões da tela de lead gate (ex.: "Tentar novamente") usam o raio do formulário,
+     sem alterar o raio padrão de .btn usado no restante do site. */
+  #lead-form-section .btn{border-radius:var(--radius-form);}
   @media (max-width:640px){.lead-gate-card{padding:28px 22px;} .lead-gate-title{font-size:20px;}}
 
   /* ===== Formulário HubSpot (lead gate) — identidade visual Nibo =====
@@ -156,14 +159,14 @@
     --hsf-field-input__border-color:#B8CCEA;
     --hsf-field-input__border-width:1px;
     --hsf-field-input__border-style:solid;
-    --hsf-field-input__border-radius:12px;
+    --hsf-field-input__border-radius:var(--radius-form);
     --hsf-field-input__padding:14px 16px;
 
     --hsf-button__font-family:"Poppins",Arial,sans-serif;
     --hsf-button__font-size:15px;
     --hsf-button__color:#FFFFFF;
     --hsf-button__background-color:#0072CE;
-    --hsf-button__border-radius:12px;
+    --hsf-button__border-radius:var(--radius-form);
     --hsf-button__padding:15px 24px;
     --hsf-button__box-shadow:none;
 
@@ -191,7 +194,7 @@
   #diagnosisLeadForm select,
   #diagnosisLeadForm textarea{
     width:100%;font-family:"Poppins",Arial,sans-serif;font-size:14px;color:#002D72;
-    background-color:#FFFFFF;border:1px solid #B8CCEA;border-radius:12px;padding:14px 16px;
+    background-color:#FFFFFF;border:1px solid #B8CCEA;border-radius:var(--radius-form);padding:14px 16px;
   }
   #diagnosisLeadForm .hs-input::placeholder,
   #diagnosisLeadForm input::placeholder,
@@ -206,7 +209,7 @@
   #diagnosisLeadForm input[type="submit"],
   #diagnosisLeadForm button[type="submit"]{
     width:100%;display:block;font-family:"Poppins",Arial,sans-serif;font-size:15px;font-weight:600;
-    color:#FFFFFF;background-color:#0072CE;border:0;border-radius:12px;padding:15px 24px;
+    color:#FFFFFF;background-color:#0072CE;border:0;border-radius:var(--radius-form);padding:15px 24px;
     box-shadow:none;cursor:pointer;transition:background-color .15s ease;
   }
   #diagnosisLeadForm .hs-button:hover,
@@ -230,8 +233,9 @@
   @media (max-width:640px){.result-header{padding:22px 20px;} .result-level-name{font-size:25px;}}
 
   .scale{margin-top:16px;}
-  .scale-track{position:relative;height:8px;background:#EDF3FA;border-radius:8px;margin-bottom:14px;}
-  .scale-marker{position:absolute;top:50%;transform:translate(-50%,-50%);width:20px;height:20px;border-radius:50%;background:var(--blue);border:3px solid #fff;box-shadow:0 0 0 2px var(--blue),0 2px 6px rgba(0,45,114,.25);}
+  .scale-track{position:relative;height:8px;background:#E5EDF7;border-radius:999px;overflow:visible;margin-bottom:14px;}
+  .scale-fill{position:absolute;top:0;left:0;height:100%;background:#0072CE;border-radius:999px;}
+  .scale-marker{position:absolute;top:50%;transform:translate(-50%,-50%);width:20px;height:20px;border-radius:50%;background:var(--blue);border:3px solid #fff;box-shadow:0 0 0 2px var(--blue),0 2px 6px rgba(0,45,114,.25);z-index:2;}
   .scale-labels{display:grid;grid-template-columns:repeat(4,1fr);font-size:11px;color:var(--muted);text-align:center;gap:4px;}
   .scale-labels span{padding:0 4px;line-height:1.3;}
   .scale-labels span.current{color:var(--navy);font-weight:600;}
@@ -1430,7 +1434,7 @@ function renderResult(r) {
       <h1 class="result-level-name">${r.estagio.nome}</h1>
       <p class="result-level-desc">${r.estagio.texto}</p>
       <div class="scale" aria-label="Escala de maturidade">
-        <div class="scale-track"><div class="scale-marker" style="left:${scaleMarkerLeft}%" aria-label="Posição atual: ${r.estagio.nome}"></div></div>
+        <div class="scale-track"><div class="scale-fill" style="width:${scaleMarkerLeft}%"></div><div class="scale-marker" style="left:${scaleMarkerLeft}%" aria-label="Posição atual: ${r.estagio.nome}"></div></div>
         <div class="scale-labels">${NIVEIS_UNI.map((n, i) => `<span class="${i === bandIndex ? 'current' : ''}">${n}</span>`).join('')}</div>
       </div>
       ${r.attentionText ? `
