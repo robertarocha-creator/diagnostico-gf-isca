@@ -395,15 +395,24 @@
   .toc-list a:hover{background:#E3EEFB;}
   @media (max-width:640px){.toc-card{padding:16px 18px;} .toc-list a{font-size:13px;padding:7px 12px;}}
 
-  /* ===== Gráfico aranha / radar (reaproveitado do Diagnóstico de Gestão Financeira) ===== */
+  /* ===== Mapa de Maturidade da Operação (radial/circular, substitui o radar) ===== */
   .radar-card{background:#fff;border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);padding:32px;border:1px solid #E5EDF7;display:flex;flex-direction:column;align-items:center;}
-  .radar-chart-wrap{width:100%;max-width:620px;margin:0 auto;}
+  .radar-chart-wrap{width:100%;max-width:600px;margin:0 auto;}
   .radar-chart{width:100%;height:auto;display:block;}
-  .radar-chart :focus,.radar-point:focus{outline:none;}
-  .radar-point.focused,.radar-point:hover{r:8;transition:r .15s ease;}
-  .radar-help{font-size:13px;color:#002D72;text-align:center;margin:18px 0 0;max-width:480px;line-height:1.55;}
+  .radar-chart :focus,.map-point:focus{outline:none;}
+  .map-point:hover{opacity:.85;}
   @media (max-width:640px){.radar-card{padding:20px 16px;}}
-  @media (prefers-reduced-motion: reduce){.radar-point{transition:none !important;}}
+  @media (prefers-reduced-motion: reduce){.map-sector{transition:none !important;}}
+
+  .section-h-row{display:flex;align-items:center;gap:8px;margin:26px 0 16px;position:relative;}
+  .section-h-row .section-h{margin:0;}
+  .info-btn{width:22px;height:22px;flex-shrink:0;border-radius:50%;border:none;background:#EEF5FE;color:var(--blue);font-size:12px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0;transition:background .15s ease;}
+  .info-btn:hover{background:#E3EEFB;}
+  .info-btn:focus-visible{outline:2.5px solid var(--sky);outline-offset:2px;}
+  .info-popover{position:absolute;top:calc(100% + 8px);left:0;z-index:5;background:#fff;border:1px solid var(--border);box-shadow:var(--shadow-md);border-radius:var(--radius-sm);padding:16px 18px;width:280px;max-width:80vw;}
+  .info-popover[hidden]{display:none;}
+  .info-popover-title{font-size:13.5px;font-weight:600;color:var(--navy);margin:0 0 8px;}
+  .info-popover-text{font-size:13px;color:var(--muted);line-height:1.6;margin:0;}
 
 </style>
 </head>
@@ -469,10 +478,14 @@
 const HUBSPOT_PORTAL_ID = "1554114";
 const HUBSPOT_FORM_ID = "89105d5c-7f26-4ca5-84cc-d14869941ed0";
 const HUBSPOT_REGION = "na1";
-const SALES_URL = "INSERIR_URL_AQUI"; // TODO: substituir pela URL de contato com Vendas (Falar com um especialista)
+const SALES_URL = "https://conteudo.nibo.com.br/contato-bpo?utm_source=diagnostico&utm_medium=diagnostico&utm_campaign=bpo";
 const STORAGE_KEY = "nibo_diagnostico_bpo_progress_v1";
 const AI_ENDPOINT = "/api/diagnostico"; // função server-side (Vercel) — enriquecimento opcional via IA
 const AI_TIMEOUT_MS = 9000;
+// Por enquanto a IA está desligada: o resultado é 100% do motor determinístico (fallback aprovado).
+// tryEnhanceWithAI() é mantida no código para uso futuro, mas retorna null sem chamar a API
+// enquanto AI_ENABLED = false, evitando qualquer espera por um endpoint inexistente.
+const AI_ENABLED = false;
 
 // ---------- MODO DE TESTE (temporário) ----------
 // Quando TEST_MODE = true: pula o formulário HubSpot e libera o resultado direto após o processamento.
@@ -710,6 +723,18 @@ function computeResult(answers){
   const dimStatus = {};
   DIM_ORDER.forEach(dkey => { dimStatus[dkey] = classifica(dimScores[dkey]); });
 
+  // 2b) Modo narrativo — determina a linguagem usada em todo o resultado (não altera pontuação/regras)
+  const lowestDimScore = Math.min(...DIM_ORDER.map(d => dimScores[d]));
+  let resultMode;
+  if (lowestDimScore < 35 || (answers.q10 === 0) || (answers.q3 === 0 && answers.q4 === 0) || levelIdx === 0) {
+    resultMode = 'GARGALOS';
+  } else if (lowestDimScore < 60) {
+    resultMode = 'EVOLUCAO';
+  } else {
+    resultMode = 'CRESCIMENTO';
+  }
+  const veryHigh = DIM_ORDER.every(d => dimScores[d] >= 80);
+
   // 3) Travas críticas (nível final)
   const rules = { R1:false, R2:false, R3:false, R4:false, R5:false, R6:false, R7:false, R8:false };
   if (answers.q10 === 0) { rules.R1 = true; levelIdx = Math.min(levelIdx, 1); }
@@ -761,7 +786,7 @@ function computeResult(answers){
     mainPriority, secondPriority, thirdPriority, priorityDims,
     strongestDim, hasStrongEvidence,
     selectedContentIds, allowedNiboCapabilities,
-    portfolioContext
+    portfolioContext, resultMode, veryHigh
   };
 }
 
@@ -808,49 +833,219 @@ function selectNiboCapabilities(priorityDims, answers){
   return picked.slice(0,3);
 }
 
-// ---------- Textos determinísticos (fallback aprovado) — usados enquanto a IA não responde / se falhar ----------
+// ---------- Modo narrativo: configuração de títulos/rótulos por modo ----------
+const MODE_CONFIG = {
+  GARGALOS:    { sectionTitle:'O que pode estar limitando seu crescimento', cardLabel:'Prioridade', tocLabel:'Gargalos' },
+  EVOLUCAO:    { sectionTitle:'Onde está sua próxima oportunidade de evolução', cardLabel:'Oportunidade', tocLabel:'Oportunidades' },
+  CRESCIMENTO: { sectionTitle:'Suas próximas alavancas de crescimento', cardLabel:'Alavanca', tocLabel:'Alavancas' }
+};
 
-function buildFallbackNarrative(r){
-  const lvlText = LEVELS[r.levelIdx].texto;
-  const ctxText = contextText(r);
-  return `${lvlText} ${ctxText}`;
+// ---------- Textos determinísticos (fallback aprovado) — motor principal desta versão (sem IA) ----------
+
+// Narrativas específicas: reconhecem combinações de sinais (estrutura x comercial x preço x valor)
+// e têm prioridade sobre o texto genérico do modo, por serem mais precisas.
+const NARRATIVE_SIGNAL_TEXT = {
+  aquisicaoFraca: 'Sua operação está mais preparada para crescer do que seu processo comercial. A estrutura já possui capacidade para absorver novos clientes, mas a entrada de oportunidades ainda é pouco previsível. Sua principal alavanca agora está em transformar essa capacidade disponível em crescimento de carteira.',
+  escalaFraca: 'Sua operação consegue gerar novas oportunidades, mas a estrutura ainda pode sentir o impacto desse crescimento. Antes de acelerar a carteira, o principal passo é ganhar capacidade operacional para que cada novo cliente não aumente o esforço da equipe na mesma proporção.',
+  precoEsforcoFraco: 'Sua operação já funciona com boa estrutura e capacidade, mas ainda falta clareza sobre a relação entre o esforço de cada cliente e o valor cobrado. Crescer sem acompanhar esse equilíbrio pode pressionar o retorno da carteira à medida que a base de clientes aumenta. O próximo passo é transformar essa percepção em um acompanhamento recorrente de preço x esforço.',
+  valorBaixo: 'Sua operação já entrega os serviços com uma boa estrutura por trás, mas essa eficiência ainda não está totalmente traduzida em percepção de valor para o cliente. Ampliar o que é comunicado além da execução — como análises e acompanhamento dos números — pode aumentar a diferenciação e a retenção da carteira.'
+};
+
+const PORTFOLIO_CLAUSE = {
+  GARGALOS: ['Como você ainda não tem clientes, este é o momento certo para estruturar a base antes de acelerar a captação.',
+    'Com uma carteira inicial, resolver isso agora evita que o crescimento aumente ainda mais a complexidade da operação.',
+    'Com uma carteira já relevante, esses pontos tendem a se repetir em vários clientes ao mesmo tempo, o que reforça a importância de agir agora.',
+    'Com uma carteira maior, esses pontos tendem a gerar impacto em escala — por isso merecem atenção prioritária antes de crescer ainda mais.'],
+  EVOLUCAO: ['Como você ainda não tem clientes, esse é um bom momento para consolidar esses pontos antes de acelerar a captação.',
+    'Com uma carteira inicial, consolidar esses pontos agora facilita absorver o próximo grupo de clientes com mais consistência.',
+    'Com uma carteira já relevante, ganhar consistência nesses pontos ajuda a manter a qualidade conforme a base cresce.',
+    'Com uma carteira maior, evoluir esses pontos ajuda a sustentar o ritmo de crescimento sem perder consistência.']
+};
+
+function buildGargalosNarrative(r){
+  const w1 = DIMENSIONS[r.mainPriority].title.toLowerCase();
+  const w2 = DIMENSIONS[r.secondPriority].title.toLowerCase();
+  const portfolioClause = PORTFOLIO_CLAUSE.GARGALOS[r.answers.q1];
+  return `Sua operação ainda depende bastante da equipe para funcionar bem, principalmente em ${w1} e ${w2}. Esses são os pontos que mais limitam sua capacidade de crescer com previsibilidade agora. ${portfolioClause}`;
 }
 
-function contextText(r){
-  switch(r.answers.q1){
-    case 0: return 'Como você ainda não tem clientes, este é o momento certo para estruturar a base — processos, controles e forma de atendimento — antes de acelerar a captação.';
-    case 1: return 'Com uma carteira inicial, este é um bom momento para organizar processos antes que o crescimento aumente a complexidade da operação.';
-    case 2: return 'Com uma carteira já relevante, os gargalos identificados tendem a se repetir em vários clientes ao mesmo tempo — o que reforça a importância de agir sobre eles agora.';
-    case 3: return 'Com uma carteira maior, pequenos gargalos tendem a gerar impacto relevante em escala — por isso produtividade, centralização e capacidade merecem atenção prioritária.';
-    default: return '';
+function buildEvolucaoNarrative(r){
+  const w1 = DIMENSIONS[r.mainPriority].title.toLowerCase();
+  const w2 = DIMENSIONS[r.secondPriority].title.toLowerCase();
+  const strong = DIMENSIONS[r.strongestDim].title.toLowerCase();
+  const portfolioClause = PORTFOLIO_CLAUSE.EVOLUCAO[r.answers.q1];
+  return `Sua operação já tem uma base construída, com destaque para ${strong}. O próximo passo não é corrigir problemas graves, mas dar mais consistência a ${w1} e ${w2}, que ainda variam e podem ganhar mais previsibilidade. ${portfolioClause}`;
+}
+
+function buildCrescimentoNarrativeDefault(){
+  return 'Sua operação já tem uma base sólida para crescer com controle. Processos, organização e capacidade operacional estão bem estruturados, então o próximo passo não é corrigir o básico, mas aproveitar essa estrutura para avançar. A oportunidade agora está em transformar capacidade em crescimento, proteger a eficiência da operação e continuar aumentando o valor percebido pelos clientes.';
+}
+
+function buildVeryHighNarrative(r){
+  const lowest = DIMENSIONS[r.mainPriority].title.toLowerCase();
+  return `Sua operação já é madura e consistente em todas as frentes avaliadas. Mesmo a dimensão com menor destaque relativo — ${lowest} — continua sendo um ponto forte, e pode ser tratada como uma possível alavanca para avançar ainda mais. A partir daqui, o foco está em otimizar o que já funciona, proteger a eficiência conquistada e ampliar o retorno e o valor percebido pela carteira.`;
+}
+
+function buildFallbackNarrative(r){
+  const { dimScores, answers, resultMode } = r;
+  const structureStrong = dimScores.OP >= 60 && dimScores.ESC >= 60;
+
+  if (resultMode !== 'GARGALOS'){
+    if (structureStrong && dimScores.CR < 60 && answers.q8 <= 1) return NARRATIVE_SIGNAL_TEXT.aquisicaoFraca;
+    if (dimScores.CR >= 60 && answers.q8 >= 2 && dimScores.ESC < 60) return NARRATIVE_SIGNAL_TEXT.escalaFraca;
+    if (structureStrong && dimScores.CR >= 60 && answers.q7 <= 1) return NARRATIVE_SIGNAL_TEXT.precoEsforcoFraco;
+    if (structureStrong && dimScores.CR >= 60 && dimScores.VAL < 60 && answers.q9 <= 1) return NARRATIVE_SIGNAL_TEXT.valorBaixo;
   }
+
+  if (r.veryHigh) return buildVeryHighNarrative(r);
+  if (resultMode === 'GARGALOS') return buildGargalosNarrative(r);
+  if (resultMode === 'EVOLUCAO') return buildEvolucaoNarrative(r);
+  return buildCrescimentoNarrativeDefault();
 }
 
 function dimFallbackText(dkey, statusIdx){
   return DIM_FALLBACK[dkey][statusIdx];
 }
 
+// ---------- Biblioteca de forças (usada na seção de pontos fortes) ----------
+const STRENGTH_LIBRARY = {
+  OP: [ { cond:(r)=> r.answers.q2>=2 || r.answers.q5>=2 || r.answers.q6>=2,
+      title:'Boa visibilidade da carteira',
+      text:'Demandas e informações estão organizadas de forma que ajudam a manter o controle mesmo com uma carteira maior.' } ],
+  ESC:[ { cond:(r)=> r.answers.q3>=2,
+      title:'Processos replicáveis',
+      text:'Sua operação já possui uma base que facilita atender novos clientes sem reconstruir a rotina a cada entrada.' },
+    { cond:(r)=> r.answers.q4>=2 || r.answers.q10>=2,
+      title:'Capacidade para crescer',
+      text:'Processos e tecnologia permitem absorver novos clientes sem aumentar a equipe na mesma proporção.' } ],
+  CR: [ { cond:(r)=> r.answers.q7>=2,
+      title:'Boa relação entre esforço e valor cobrado',
+      text:'Você já acompanha o esforço exigido pelos clientes e utiliza essa informação nas decisões da operação.' } ],
+  VAL:[ { cond:(r)=> r.answers.q9>=2,
+      title:'Entrega que vai além da execução',
+      text:'Seus clientes já recebem informações que ajudam a entender os números e tomar decisões.' } ]
+};
+
+function collectStrengths(r, maxCount){
+  const found = [];
+  const order = [...DIM_ORDER].sort((a,b)=> r.dimScores[b]-r.dimScores[a]);
+  order.forEach(dkey => {
+    if (found.length >= maxCount) return;
+    if (r.dimStatus[dkey] < 2) return; // só considera "bem estruturada" ou "ponto forte"
+    const candidates = STRENGTH_LIBRARY[dkey] || [];
+    const match = candidates.find(c => c.cond(r));
+    if (match) found.push(match);
+    else found.push({ title: `${DIMENSIONS[dkey].title} é um ponto forte`, text: dimFallbackText(dkey, r.dimStatus[dkey]) });
+  });
+  if (found.length === 0){
+    found.push({ title: DIMENSIONS[r.strongestDim].title, text: dimFallbackText(r.strongestDim, r.dimStatus[r.strongestDim]) });
+  }
+  return found.slice(0, maxCount);
+}
+
+// ---------- Prioridades / Oportunidades / Alavancas (título e "porquê" variam por modo) ----------
+const PRIORITY_TITLES = {
+  GARGALOS:    { OP:'Centralizar operação e processos', ESC:'Reduzir dependência de trabalho manual', CR:'Tornar aquisição e retorno mais previsíveis', VAL:'Tornar o valor entregue mais visível' },
+  EVOLUCAO:    { OP:'Consolidar a visão da carteira', ESC:'Ganhar consistência na produtividade', CR:'Fortalecer a previsibilidade comercial', VAL:'Tornar a entrega de valor mais consistente' },
+  CRESCIMENTO: { OP:'Ampliar o controle da operação em escala', ESC:'Proteger a eficiência conforme a carteira cresce', CR:'Aumentar previsibilidade e retorno comercial', VAL:'Ampliar a percepção de valor entregue' }
+};
+const PRIORITY_WHY = {
+  GARGALOS: {
+    OP:'Sem uma base centralizada, cada cliente adicional aumenta o esforço de gestão e o risco de retrabalho.',
+    ESC:'Quando a rotina depende de trabalho manual, crescer a carteira tende a exigir mais equipe e custo na mesma proporção.',
+    CR:'Sem previsibilidade comercial ou clareza sobre esforço x preço, a carteira pode crescer sem melhorar o retorno da operação.',
+    VAL:'Uma entrega apenas operacional dificulta a diferenciação e pode limitar a retenção de clientes.'
+  },
+  EVOLUCAO: {
+    OP:'Consolidar a visão da carteira evita que o crescimento aumente a complexidade da gestão do dia a dia.',
+    ESC:'Ganhar consistência agora facilita absorver novos clientes sem sobrecarregar a equipe.',
+    CR:'Uma previsibilidade comercial mais forte ajuda a sustentar o ritmo de crescimento com mais segurança.',
+    VAL:'Tornar a entrega mais consistente aumenta a percepção de valor e fortalece a retenção.'
+  },
+  CRESCIMENTO: {
+    OP:'Mesmo com boa estrutura, ampliar o controle ajuda a manter a qualidade conforme a carteira aumenta de tamanho.',
+    ESC:'Proteger a eficiência conquistada evita que o crescimento da carteira pressione a equipe no futuro.',
+    CR:'Aumentar a previsibilidade comercial conecta melhor a capacidade disponível a metas de crescimento.',
+    VAL:'Ampliar a percepção de valor fortalece a diferenciação e o potencial de retorno da carteira.'
+  }
+};
+
+function priorityIdentifiedText(dkey, r){
+  const status = r.dimStatus[dkey];
+  if (status === 3){
+    return `Entre os pilares já bem estruturados, ${DIMENSIONS[dkey].title.toLowerCase()} é a frente com maior espaço para gerar um novo salto de crescimento. ${dimFallbackText(dkey, status)}`;
+  }
+  return dimFallbackText(dkey, status);
+}
+
 function priorityFallback(dkey, r){
   const acts = ACTIONS[dkey];
-  const status = r.dimStatus[dkey];
-  const title = dkey === 'OP' ? 'Centralizar operação e processos'
-    : dkey === 'ESC' ? 'Ganhar capacidade e reduzir trabalho manual'
-    : dkey === 'CR' ? 'Tornar aquisição e retorno mais previsíveis'
-    : 'Tornar o valor entregue mais visível';
+  const mode = r.resultMode;
   return {
-    title,
-    identified: DIM_FALLBACK[dkey][status],
-    why: dkey === 'OP' ? 'Sem uma base centralizada, cada cliente adicional aumenta o esforço de gestão e o risco de retrabalho.'
-       : dkey === 'ESC' ? 'Quando a rotina depende de trabalho manual, crescer a carteira tende a exigir mais equipe e custo na mesma proporção.'
-       : dkey === 'CR' ? 'Sem previsibilidade comercial ou clareza sobre esforço x preço, a carteira pode crescer sem melhorar o retorno da operação.'
-       : 'Uma entrega apenas operacional dificulta a diferenciação e pode limitar a retenção de clientes.',
+    title: PRIORITY_TITLES[mode][dkey],
+    identified: priorityIdentifiedText(dkey, r),
+    why: PRIORITY_WHY[mode][dkey],
     action_now: acts[0].texto
   };
 }
 
-// ---------- Chamada opcional à IA (arquitetura híbrida — fallback determinístico sempre garante o resultado) ----------
+// ---------- Plano de crescimento 7/30/90 — função distinta por período e por modo ----------
+const PLAN_LIBRARY = {
+  GARGALOS: {
+    OP: { d7:'Mapeie por quais canais e formatos as demandas dos clientes chegam hoje.',
+      d30:'Escolha uma fonte principal para concentrar essas demandas e defina responsáveis e status para cada uma.',
+      d90:'Meça quanto tempo esse processo mais organizado economiza e use esse ganho para dar mais atenção à carteira.' },
+    ESC:{ d7:'Mapeie quais atividades repetitivas mais consomem tempo da equipe.',
+      d30:'Padronize e automatize as atividades que mais impactam a capacidade operacional.',
+      d90:'Compare a capacidade antes e depois das mudanças e defina quanto do ganho pode ser usado para absorver novos clientes.' },
+    CR: { d7:'Escolha uma amostra de clientes e mapeie o esforço real de atendimento de cada um.',
+      d30:'Compare esse esforço com o valor cobrado e ajuste preço ou escopo onde fizer sentido.',
+      d90:'Consolide esse acompanhamento como rotina e use-o para decidir a entrada de novos clientes.' },
+    VAL:{ d7:'Escolha as informações que mais ajudam o cliente a entender os números do negócio.',
+      d30:'Crie uma cadência simples para compartilhar essas informações com os clientes.',
+      d90:'Consolide essa rotina e meça se ela está fortalecendo a percepção de valor e a retenção.' }
+  },
+  EVOLUCAO: {
+    OP: { d7:'Escolha a principal rotina de organização da carteira que ainda depende de exceções.',
+      d30:'Transforme essa rotina em um processo mais padronizado, com um único lugar de referência.',
+      d90:'Acompanhe o impacto e replique o padrão para as demais rotinas da operação.' },
+    ESC:{ d7:'Escolha a principal rotina que ainda depende de exceções manuais.',
+      d30:'Transforme essa rotina em um processo mais padronizado.',
+      d90:'Acompanhe o impacto e replique o padrão para outras etapas da operação.' },
+    CR: { d7:'Escolha um critério simples para comparar esforço de atendimento e valor cobrado.',
+      d30:'Aplique esse critério a uma parte da carteira e ajuste o que fizer sentido.',
+      d90:'Torne esse acompanhamento uma rotina recorrente e use-o nas próximas negociações.' },
+    VAL:{ d7:'Escolha uma informação que ainda depende de solicitação do cliente para ser compartilhada.',
+      d30:'Transforme essa informação em parte de uma rotina proativa de acompanhamento.',
+      d90:'Meça se essa rotina está aumentando a percepção de valor e amplie para outras informações.' }
+  },
+  CRESCIMENTO: {
+    OP: { d7:'Escolha qual parte do controle da operação pode ganhar ainda mais capacidade com a carteira maior.',
+      d30:'Teste um ajuste concreto nesse ponto e acompanhe o impacto na rotina.',
+      d90:'Consolide o ajuste que funcionou e conecte-o a uma meta de crescimento da carteira.' },
+    ESC:{ d7:'Escolha qual alavanca pode gerar mais impacto agora: aquisição, retorno dos contratos ou expansão da entrega.',
+      d30:'Teste uma iniciativa concreta nessa frente e acompanhe os resultados.',
+      d90:'Escale o que funcionou e conecte essa evolução a uma meta de crescimento compatível com a capacidade da operação.' },
+    CR: { d7:'Escolha entre aquisição, retorno dos contratos ou expansão da entrega como alavanca prioritária.',
+      d30:'Teste uma iniciativa concreta nessa frente e acompanhe os resultados de perto.',
+      d90:'Escale o que funcionou e conecte essa evolução a uma meta de crescimento compatível com a capacidade da operação.' },
+    VAL:{ d7:'Escolha uma forma de tornar o valor já entregue mais visível para o cliente.',
+      d30:'Teste essa iniciativa com uma parte da carteira e colete a percepção dos clientes.',
+      d90:'Escale a iniciativa que funcionou e conecte-a a metas de retenção e expansão da carteira.' }
+  }
+};
+
+function buildPlan(r, horizon){
+  const key = horizon==='7' ? 'd7' : horizon==='30' ? 'd30' : 'd90';
+  const lib = PLAN_LIBRARY[r.resultMode];
+  return r.priorityDims.slice(0,2).map(dkey => (lib[dkey] && lib[dkey][key]) || '').filter(Boolean);
+}
+
+// ---------- Chamada opcional à IA (arquitetura híbrida — desativada nesta versão, ver AI_ENABLED) ----------
 
 async function tryEnhanceWithAI(r){
+
+  if (!AI_ENABLED) return null; // IA desligada nesta versão — resultado 100% determinístico
   const payload = {
     answers: r.answers,
     overall_score: r.overall,
@@ -1015,8 +1210,8 @@ function showProcessing(){
   const steps = [
     'Analisando sua operação...',
     'Comparando os principais pontos...',
-    'Identificando seus gargalos...',
-    'Montando suas prioridades...',
+    'Identificando forças e oportunidades...',
+    'Definindo suas prioridades...',
     'Preparando seu plano de crescimento...'
   ];
   const container = document.getElementById('processing');
@@ -1032,9 +1227,8 @@ function showProcessing(){
 
   const nodes = steps.map((_,i)=>document.getElementById(`pstep-${i}`));
   let i = 0;
-  // TEST_MODE: sem delays artificiais extras — avança o passo a passo o mais rápido possível.
-  // Produção (TEST_MODE=false): preserva o tempo visual normal do processamento.
-  const stepDuration = TEST_MODE ? 20 : 380;
+  // Duração fixa (~5s no total) para que as mensagens sejam lidas — mesmo em TEST_MODE.
+  const stepDuration = 950;
   const iv = setInterval(() => {
     if (i>0) nodes[i-1].classList.remove('active');
     if (i < nodes.length){
@@ -1141,19 +1335,19 @@ function scoreBarColor(status){
 }
 
 /* ============================================================
-   GRÁFICO ARANHA / RADAR (SVG nativo — reaproveitado do Diagnóstico
-   de Gestão Financeira; adaptado para as 4 dimensões do BPO)
-   Não exibe números: apenas nome da dimensão e classificação textual.
+   MAPA DE MATURIDADE DA OPERAÇÃO (SVG nativo, radial/circular)
+   Substitui o gráfico aranha: mais adequado para 4 pilares.
+   4 setores (um por dimensão), avançando do centro para a borda
+   conforme o resultado interno. Não exibe números/percentuais/eixos.
    ============================================================ */
-const RADAR_COLORS_BPO = {
-  grid:'#D6E1F0', axis:'#B8CCEA', fillColor:'#0072CE', fillOpacity:0.18,
-  stroke:'#0072CE', point:'#002D72', pointBorder:'#FFFFFF', focus:'#41B6E6', label:'#2C2C2A'
+const MAP_COLORS_BPO = {
+  OP:'#002D72', ESC:'#0072CE', CR:'#41B6E6', VAL:'#FF40B3',
+  grid:'#E5EDF7', hub:'#F5F8FD', label:'#2C2C2A'
 };
-const RADAR_DIM_LABELS_BPO = {
+const MAP_DIM_LABELS_BPO = {
   OP:['Operação e','controle'], ESC:['Produtividade','e escala'],
   CR:['Crescimento e','retorno'], VAL:['Valor entregue','ao cliente']
 };
-let lastRadarRenderBPO = null;
 
 function svgEl(tag, attrs){
   const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
@@ -1161,78 +1355,83 @@ function svgEl(tag, attrs){
   return el;
 }
 
-function renderMaturityRadarBPO(dimScores, dimStatus){
-  const svg = document.getElementById('maturityRadarBPO');
-  if (!svg) return;
-  Array.from(svg.querySelectorAll('.radar-generated')).forEach(el => el.remove());
+function polarPoint(cx, cy, radius, angleDeg){
+  const rad = (angleDeg - 90) * Math.PI / 180;
+  return { x: cx + Math.cos(rad)*radius, y: cy + Math.sin(rad)*radius };
+}
 
-  const width = 640, height = 560;
-  const centerX = width/2, centerY = 270, maxRadius = 190;
+// Constrói o "path" de um setor (fatia de rosca) entre dois ângulos e dois raios
+function sectorPath(cx, cy, rInner, rOuter, angleStart, angleEnd){
+  const p1 = polarPoint(cx, cy, rInner, angleStart);
+  const p2 = polarPoint(cx, cy, rOuter, angleStart);
+  const p3 = polarPoint(cx, cy, rOuter, angleEnd);
+  const p4 = polarPoint(cx, cy, rInner, angleEnd);
+  return `M ${p1.x} ${p1.y} L ${p2.x} ${p2.y} A ${rOuter} ${rOuter} 0 0 1 ${p3.x} ${p3.y} L ${p4.x} ${p4.y} A ${rInner} ${rInner} 0 0 0 ${p1.x} ${p1.y} Z`;
+}
+
+function renderMaturityMapBPO(dimScores, dimStatus){
+  const svg = document.getElementById('maturityMapBPO');
+  if (!svg) return;
+  Array.from(svg.querySelectorAll('.map-generated')).forEach(el => el.remove());
+
+  const width = 640, height = 640;
+  const cx = width/2, cy = height/2;
+  const rInner = 34, rMax = 190;
+  const gap = 3; // graus de espaço entre setores
   const axes = DIM_ORDER.slice();
   const n = axes.length;
+  const sectorSpan = 360/n;
 
-  function pointFor(index, radius){
-    const angle = -Math.PI/2 + index * (2*Math.PI/n);
-    return { x: centerX + Math.cos(angle)*radius, y: centerY + Math.sin(angle)*radius, angle };
-  }
+  const group = svgEl('g', { class:'map-generated' });
 
-  const group = svgEl('g', { class:'radar-generated' });
-
-  [1,2,3].forEach(ring => {
-    const r = maxRadius * (ring/3);
-    const pts = axes.map((_,i)=>pointFor(i,r)).map(p=>`${p.x},${p.y}`).join(' ');
-    group.appendChild(svgEl('polygon',{ points:pts, fill:'none', stroke:RADAR_COLORS_BPO.grid, 'stroke-width':'1.5' }));
+  // Anéis-guia (4 níveis de maturidade), puramente visuais, sem números
+  [0.25,0.5,0.75,1.0].forEach(f => {
+    const r = rInner + f*(rMax-rInner);
+    group.appendChild(svgEl('circle', { cx, cy, r, fill:'none', stroke:MAP_COLORS_BPO.grid, 'stroke-width':'1.5' }));
   });
 
-  axes.forEach((_,i) => {
-    const p = pointFor(i, maxRadius);
-    group.appendChild(svgEl('line',{ x1:centerX, y1:centerY, x2:p.x, y2:p.y, stroke:RADAR_COLORS_BPO.axis, 'stroke-width':'1.5' }));
-  });
+  // Hub central decorativo
+  group.appendChild(svgEl('circle', { cx, cy, r:rInner, fill:MAP_COLORS_BPO.hub, stroke:MAP_COLORS_BPO.grid, 'stroke-width':'1.5' }));
 
-  const pointCoordinates = axes.map((dkey,i) => {
-    const frac = Math.max(0, Math.min(100, dimScores[dkey]||0)) / 100;
-    const p = pointFor(i, maxRadius*frac);
-    return { dkey, x:p.x, y:p.y };
-  });
-  const polygonPoints = pointCoordinates.map(p=>`${p.x},${p.y}`).join(' ');
-  group.appendChild(svgEl('polygon',{
-    points:polygonPoints, fill:RADAR_COLORS_BPO.fillColor, 'fill-opacity':String(RADAR_COLORS_BPO.fillOpacity),
-    stroke:RADAR_COLORS_BPO.stroke, 'stroke-width':'3', 'stroke-linejoin':'round'
-  }));
-
-  pointCoordinates.forEach(p => {
-    const statusTxt = statusLabel(dimStatus[p.dkey]);
-    const label = DIMENSIONS[p.dkey].title;
-    const marker = svgEl('circle', {
-      cx:p.x, cy:p.y, r:'6', fill:RADAR_COLORS_BPO.point, stroke:RADAR_COLORS_BPO.pointBorder,
-      'stroke-width':'2', class:'radar-point', tabindex:'0', role:'img',
-      'aria-label': `${label}: ${statusTxt}`
+  // Setores — cada um avança do centro até um raio proporcional ao score da dimensão
+  axes.forEach((dkey, i) => {
+    const angleStart = i*sectorSpan + gap/2;
+    const angleEnd = (i+1)*sectorSpan - gap/2;
+    const frac = Math.max(0.04, Math.min(100, dimScores[dkey]||0) / 100);
+    const rOuter = rInner + frac*(rMax-rInner);
+    const path = svgEl('path', {
+      d: sectorPath(cx, cy, rInner, rOuter, angleStart, angleEnd),
+      fill: MAP_COLORS_BPO[dkey], 'fill-opacity':'0.85',
+      stroke:'#FFFFFF', 'stroke-width':'3', class:'map-sector', tabindex:'0', role:'img',
+      'aria-label': `${DIMENSIONS[dkey].title}: ${statusLabel(dimStatus[dkey])}`
     });
     const title = svgEl('title', {});
-    title.textContent = `${label}: ${statusTxt}`;
-    marker.appendChild(title);
-    marker.addEventListener('mouseenter', () => marker.setAttribute('fill', RADAR_COLORS_BPO.focus));
-    marker.addEventListener('mouseleave', () => marker.setAttribute('fill', RADAR_COLORS_BPO.point));
-    marker.addEventListener('focus', () => marker.setAttribute('fill', RADAR_COLORS_BPO.focus));
-    marker.addEventListener('blur', () => marker.setAttribute('fill', RADAR_COLORS_BPO.point));
-    group.appendChild(marker);
+    title.textContent = `${DIMENSIONS[dkey].title}: ${statusLabel(dimStatus[dkey])}`;
+    path.appendChild(title);
+    group.appendChild(path);
+
+    // Marcador na ponta do setor, indicando até onde a dimensão avançou
+    const markerAngle = (angleStart+angleEnd)/2;
+    const mp = polarPoint(cx, cy, rOuter, markerAngle);
+    group.appendChild(svgEl('circle', { cx:mp.x, cy:mp.y, r:'4', fill:'#FFFFFF', stroke:MAP_COLORS_BPO[dkey], 'stroke-width':'2', class:'map-point' }));
   });
 
-  axes.forEach((dkey,i) => {
-    const labelRadius = maxRadius + 46;
-    const p = pointFor(i, labelRadius);
-    const cosA = Math.cos(p.angle);
+  // Labels ao redor do mapa (nome do pilar, sem números)
+  axes.forEach((dkey, i) => {
+    const midAngle = i*sectorSpan + sectorSpan/2;
+    const lp = polarPoint(cx, cy, rMax+55, midAngle);
+    const cosA = Math.cos((midAngle-90)*Math.PI/180);
     let anchor = 'middle';
-    if (cosA > 0.15) anchor = 'start';
-    else if (cosA < -0.15) anchor = 'end';
+    if (cosA > 0.2) anchor = 'start';
+    else if (cosA < -0.2) anchor = 'end';
     const text = svgEl('text', {
-      x:p.x, y:p.y, 'text-anchor':anchor, 'dominant-baseline':'middle',
-      fill:RADAR_COLORS_BPO.label, 'font-family':"'Poppins', sans-serif", 'font-size':'13'
+      x:lp.x, y:lp.y, 'text-anchor':anchor, 'dominant-baseline':'middle',
+      fill:MAP_COLORS_BPO.label, 'font-family':"'Poppins', sans-serif", 'font-size':'13'
     });
-    const lines = RADAR_DIM_LABELS_BPO[dkey];
-    const tspan1 = svgEl('tspan', { x:p.x, dy:'-0.35em' });
+    const lines = MAP_DIM_LABELS_BPO[dkey];
+    const tspan1 = svgEl('tspan', { x:lp.x, dy:'-0.35em' });
     tspan1.textContent = lines[0];
-    const tspan2 = svgEl('tspan', { x:p.x, dy:'1.15em' });
+    const tspan2 = svgEl('tspan', { x:lp.x, dy:'1.15em' });
     tspan2.textContent = lines[1];
     text.appendChild(tspan1); text.appendChild(tspan2);
     group.appendChild(text);
@@ -1240,21 +1439,36 @@ function renderMaturityRadarBPO(dimScores, dimStatus){
 
   svg.appendChild(group);
 
-  const summaryEl = document.getElementById('radarAccessibleSummaryBPO');
+  const summaryEl = document.getElementById('mapAccessibleSummaryBPO');
   if (summaryEl){
-    const items = pointCoordinates.map(p => `${DIMENSIONS[p.dkey].title}: ${statusLabel(dimStatus[p.dkey])}`);
+    const items = axes.map(dkey => `${DIMENSIONS[dkey].title}: ${statusLabel(dimStatus[dkey])}`);
     summaryEl.textContent = 'Visão geral da sua operação. ' + items.join('. ') + '.';
   }
-
-  lastRadarRenderBPO = { axes, dimScores: axes.map(d=>dimScores[d]), dimStatus: axes.map(d=>dimStatus[d]) };
 }
+
+function setupRadarInfoPopover(){
+  const btn = document.getElementById('mapInfoBtn');
+  const pop = document.getElementById('mapInfoPopover');
+  if (!btn || !pop) return;
+  function closePop(){ pop.hidden = true; btn.setAttribute('aria-expanded','false'); }
+  function openPop(){ pop.hidden = false; btn.setAttribute('aria-expanded','true'); }
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (pop.hidden) openPop(); else closePop();
+  });
+  document.addEventListener('click', (e) => {
+    if (!pop.hidden && !pop.contains(e.target) && e.target !== btn) closePop();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !pop.hidden){ closePop(); btn.focus(); }
+  });
+}
+
 
 function renderResult(r, ai){
   const level = r.level;
-  const portfolioLabels = ['Ainda não tenho clientes','1 a 4 clientes','5 a 15 clientes','Mais de 15 clientes'];
+  const modeCfg = MODE_CONFIG[r.resultMode];
   const overallAnalysis = (ai && ai.overall_analysis) ? ai.overall_analysis : buildFallbackNarrative(r);
-  const closing = (ai && ai.closing_summary) ? ai.closing_summary
-    : `${level.nome} — o foco agora é ${DIMENSIONS[r.mainPriority].title.toLowerCase()}.`;
 
   const dimensionInsights = {};
   DIM_ORDER.forEach(dkey => {
@@ -1262,13 +1476,23 @@ function renderResult(r, ai){
     dimensionInsights[dkey] = (aiInsight && aiInsight.insight) ? aiInsight.insight : dimFallbackText(dkey, r.dimStatus[dkey]);
   });
 
+  // Pontos fortes: título e quantidade variam conforme a maturidade (baixa / intermediária / alta)
   const strengthsAI = (ai && Array.isArray(ai.strengths)) ? ai.strengths : null;
-  let strengthsHtml = '';
-  if (r.hasStrongEvidence){
-    const title = strengthsAI && strengthsAI[0] ? strengthsAI[0].title : `${DIMENSIONS[r.strongestDim].title} é o seu ponto mais forte`;
-    const text = strengthsAI && strengthsAI[0] ? strengthsAI[0].explanation : dimFallbackText(r.strongestDim, r.dimStatus[r.strongestDim]);
-    strengthsHtml = `<div class="scard"><p class="scard-title">${title}</p><p class="scard-text">${text}</p></div>`;
+  let strengthsTitle, strengthsList;
+  if (r.resultMode === 'CRESCIMENTO'){
+    strengthsTitle = 'O que sustenta seu crescimento hoje';
+    strengthsList = strengthsAI || collectStrengths(r, 3);
+  } else if (r.resultMode === 'EVOLUCAO'){
+    strengthsTitle = 'O que você já construiu bem';
+    strengthsList = strengthsAI || collectStrengths(r, 2);
+  } else {
+    strengthsTitle = 'Sua melhor base hoje';
+    strengthsList = strengthsAI || collectStrengths(r, 1);
   }
+  const strengthsHtml = strengthsList.map(s => {
+    const text = s.text || s.explanation || '';
+    return `<div class="scard"><p class="scard-title">${s.title}</p><p class="scard-text">${text}</p></div>`;
+  }).join('');
 
   const priorityCards = r.priorityDims.map((dkey, idx) => {
     const aiP = ai && Array.isArray(ai.priorities) ? ai.priorities[idx] : null;
@@ -1280,7 +1504,7 @@ function renderResult(r, ai){
     return `
       <div class="pcard${idx===0?' p1':''}">
         <div class="pcard-head">
-          <span class="pcard-badge">Prioridade ${idx+1}</span>
+          <span class="pcard-badge">${modeCfg.cardLabel} ${idx+1}</span>
           <span class="pcard-pilar">${DIMENSIONS[dkey].title}</span>
         </div>
         <h3 class="pcard-title">${title}</h3>
@@ -1292,9 +1516,9 @@ function renderResult(r, ai){
       </div>`;
   }).join('');
 
-  const plan7 = (ai && ai.growth_plan_7) || defaultPlan(r,'7');
-  const plan30 = (ai && ai.growth_plan_30) || defaultPlan(r,'30');
-  const plan90 = (ai && ai.growth_plan_90) || defaultPlan(r,'90');
+  const plan7 = (ai && ai.growth_plan_7) || buildPlan(r,'7');
+  const plan30 = (ai && ai.growth_plan_30) || buildPlan(r,'30');
+  const plan90 = (ai && ai.growth_plan_90) || buildPlan(r,'90');
 
   const contentCards = r.selectedContentIds.map(id => {
     const c = CONTENT_LIBRARY[id];
@@ -1310,12 +1534,6 @@ function renderResult(r, ai){
         <a class="btn btn-secondary" href="${c.url}" target="_blank" rel="noopener">${c.cta}</a>
       </div>`;
   }).join('');
-
-  const niboBridge = ai && ai.nibo_bridge ? ai.nibo_bridge : {
-    title:'Transforme sua estrutura em capacidade para crescer',
-    intro:`Os pontos identificados no seu diagnóstico têm relação direta com o que o Nibo BPO oferece para operações como a sua.`,
-    bullets: r.allowedNiboCapabilities.map(c=>`${c.titulo}: ${c.texto}`)
-  };
 
   document.getElementById('result-content').innerHTML = `
     <section class="result-section">
@@ -1343,7 +1561,7 @@ function renderResult(r, ai){
       <ul class="toc-list">
         <li><a href="#sec-operacao">Sua operação</a></li>
         <li><a href="#sec-fortes">Pontos fortes</a></li>
-        <li><a href="#sec-prioridades">Gargalos</a></li>
+        <li><a href="#sec-prioridades">${modeCfg.tocLabel}</a></li>
         <li><a href="#sec-plano">Plano de crescimento</a></li>
         <li><a href="#sec-conteudos">Conteúdos para você</a></li>
       </ul>
@@ -1363,31 +1581,34 @@ function renderResult(r, ai){
           </div>`).join('')}
       </div>
 
-      <h3 class="section-h2">Visão geral da sua operação</h3>
+      <div class="section-h-row">
+        <h3 class="section-h">Visão geral da sua operação</h3>
+        <button type="button" class="info-btn" id="mapInfoBtn" aria-expanded="false" aria-controls="mapInfoPopover" aria-label="Como interpretar este mapa">
+          <i class="fa-solid fa-info" aria-hidden="true"></i>
+        </button>
+        <div class="info-popover" id="mapInfoPopover" role="dialog" hidden>
+          <p class="info-popover-title">Como interpretar este mapa?</p>
+          <p class="info-popover-text">Cada área representa um pilar avaliado no diagnóstico. Quanto mais a área avança em direção à borda, mais estruturada está aquela frente da operação. O mapa ajuda a comparar seus pilares e identificar forças e oportunidades de evolução.</p>
+        </div>
+      </div>
       <div class="radar-card">
         <div class="radar-chart-wrap">
-          <svg id="maturityRadarBPO" class="radar-chart" viewBox="0 0 640 560" role="img" aria-labelledby="radarTitleBPO radarDescriptionBPO">
-            <title id="radarTitleBPO">Visão geral da sua operação</title>
-            <desc id="radarDescriptionBPO">Gráfico com a classificação identificada nas quatro dimensões avaliadas.</desc>
+          <svg id="maturityMapBPO" class="radar-chart" viewBox="0 0 640 640" role="img" aria-labelledby="mapTitleBPO mapDescriptionBPO">
+            <title id="mapTitleBPO">Visão geral da sua operação</title>
+            <desc id="mapDescriptionBPO">Mapa com a maturidade identificada nas quatro dimensões avaliadas.</desc>
           </svg>
         </div>
-        <p class="radar-help">Quanto mais próximo da borda, mais estruturada está a dimensão. Os pontos próximos ao centro indicam áreas que precisam de mais atenção.</p>
-        <div id="radarAccessibleSummaryBPO" class="sr-only"></div>
+        <div id="mapAccessibleSummaryBPO" class="sr-only"></div>
       </div>
     </section>
 
-    ${strengthsHtml ? `
     <section class="result-section" id="sec-fortes">
-      <h2 class="section-h">O que você já construiu bem</h2>
+      <h2 class="section-h">${strengthsTitle}</h2>
       <div class="strengths">${strengthsHtml}</div>
-    </section>` : `
-    <section class="result-section" id="sec-fortes">
-      <h2 class="section-h">Sua melhor base hoje</h2>
-      <div class="strengths"><div class="scard"><p class="scard-title">${DIMENSIONS[r.strongestDim].title}</p><p class="scard-text">${dimFallbackText(r.strongestDim, r.dimStatus[r.strongestDim])}</p></div></div>
-    </section>`}
+    </section>
 
     <section class="result-section" id="sec-prioridades">
-      <h2 class="section-h">O que pode estar limitando seu crescimento</h2>
+      <h2 class="section-h">${modeCfg.sectionTitle}</h2>
       <div class="priorities">${priorityCards}</div>
     </section>
 
@@ -1414,19 +1635,14 @@ function renderResult(r, ai){
       </div>
     </section>
   `;
-  renderMaturityRadarBPO(r.dimScores, r.dimStatus);
+  renderMaturityMapBPO(r.dimScores, r.dimStatus);
+  setupRadarInfoPopover();
   clearProgress();
 }
 
+
 function planItemsHtml(items){
   return (items||[]).map(t => `<label class="plan-item"><input type="checkbox" class="plan-check"><span>${t}</span></label>`).join('');
-}
-
-function defaultPlan(r, horizon){
-  const acts = r.priorityDims.map(dkey => ACTIONS[dkey]).flat();
-  if (horizon === '7') return acts.slice(0,2).map(a=>a.titulo);
-  if (horizon === '30') return acts.slice(0,3).map(a=>`${a.titulo}: ${a.texto.split(';')[0]}.`);
-  return [`Revisar os avanços em ${DIMENSIONS[r.mainPriority].title.toLowerCase()} e ${DIMENSIONS[r.secondPriority].title.toLowerCase()}.`, `Conectar capacidade da operação a metas de crescimento da carteira.`];
 }
 
 document.addEventListener('click', (e) => {
