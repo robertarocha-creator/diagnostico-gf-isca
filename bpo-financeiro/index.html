@@ -1,0 +1,1444 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diagnóstico de BPO Financeiro | Nibo</title>
+<meta name="description" content="Responda 10 perguntas e descubra os principais gargalos da sua operação de BPO Financeiro e o que priorizar para crescer com retorno.">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="shortcut icon" href="favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script charset="utf-8" src="https://js.hsforms.net/forms/embed/v2.js"></script>
+<style>
+:root{
+    --navy:#002D72; --blue:#0072CE; --sky:#41B6E6; --ice:#B8CCEA; --pink:#FF40B3;
+    --text:#2C2C2A; --muted:#002D72; --bg:#F5F8FD; --border:#E5EDF7; --border-strong:#D6E1F0;
+    --shadow-sm:0 1px 2px rgba(0,45,114,.04), 0 2px 8px rgba(0,45,114,.05);
+    --shadow-md:0 2px 4px rgba(0,45,114,.05), 0 8px 24px rgba(0,45,114,.08);
+    --radius-lg:20px; --radius-md:16px; --radius-sm:12px; --radius-form:15px;
+    --green:#0e8b52;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;font-family:"Poppins",Arial,sans-serif;background:var(--bg);color:var(--text);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;}
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; scroll-behavior:auto !important;}
+  }
+
+  header{background:#fff;border-bottom:1px solid var(--border);padding:14px 40px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;}
+  header .brand{display:flex;align-items:center;gap:12px;}
+  header img{height:26px;width:auto;display:block;max-width:120px;}
+  header .tag{font-size:12.5px;color:var(--navy);font-weight:500;letter-spacing:.01em;}
+  @media (max-width:640px){header{padding:10px 20px;} header img{height:20px;} header .tag{font-size:10.5px;}}
+
+  .page{max-width:1120px;margin:0 auto;padding:0 40px;}
+  @media (max-width:640px){.page{padding:0 20px;}}
+
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:"Poppins",Arial,sans-serif;font-weight:600;border-radius:12px;cursor:pointer;transition:all .18s ease;border:1px solid transparent;white-space:nowrap;text-decoration:none;}
+  .btn:focus-visible{outline:3px solid var(--sky);outline-offset:2px;}
+  .btn-primary{background:var(--blue);color:#fff;padding:16px 32px;font-size:16px;border:none;}
+  .btn-primary:hover{background:var(--navy);}
+  .btn-secondary{background:#fff;color:var(--blue);border:1px solid var(--blue);padding:12px 20px;font-size:14px;}
+  .btn-secondary:hover{background:#EEF5FE;}
+  .btn-ghost{background:transparent;color:var(--muted);padding:10px 16px;font-size:14px;font-weight:500;border:1px solid transparent;}
+  .btn-ghost:hover{color:var(--navy);background:#EEF5FE;}
+  @media (max-width:640px){.btn-primary{width:100%;padding:16px 24px;}}
+
+  .intro-wrap{padding:40px 0 48px;}
+  .intro-grid{display:grid;grid-template-columns:1.05fr 0.95fr;gap:56px;align-items:center;}
+  .intro h1{font-family:"Poppins",Arial,sans-serif;font-size:32px;font-weight:600;color:var(--navy);line-height:1.25;margin:0 0 14px;letter-spacing:-.01em;}
+  .intro-lead{font-size:15.5px;color:rgba(0,45,114,.72);font-weight:400;line-height:1.55;margin:0 0 26px;max-width:440px;}
+  .intro-benefits{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:30px 0 0;max-width:460px;}
+  .benefit{
+    display:inline-flex;align-items:center;gap:9px;background:#fff;padding:10px 16px 10px 10px;
+    border-radius:100px;border:1px solid var(--border);box-shadow:var(--shadow-sm);
+    font-size:13px;color:var(--navy);font-weight:500;transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .benefit:hover{transform:translateY(-1px);box-shadow:var(--shadow-md);}
+  .benefit .chip{
+    width:26px;height:26px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;
+    background:var(--blue);color:#fff;font-size:12px;
+  }
+  .benefit:nth-child(2) .chip{background:var(--navy);}
+  .benefit:nth-child(3) .chip{background:var(--pink);}
+  .benefit:nth-child(4) .chip{background:var(--sky);}
+  @media (max-width:480px){.intro-benefits{grid-template-columns:1fr;}}
+
+  .hero-visual-col{display:flex;align-items:center;justify-content:center;}
+  .hero-visual{
+    width:100%; max-width:440px; margin:0 auto;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .hero-visual-img{
+    width:100%; height:auto; max-height:440px;
+    object-fit:contain; display:block;
+  }
+  @media (max-width:820px){.intro-grid{grid-template-columns:1fr;gap:32px;} .intro h1{font-size:28px;} .intro-lead{max-width:none;} .intro-wrap{padding:28px 0 40px;} .hero-visual{max-width:320px;}}
+  @media (max-width:640px){.intro h1{font-size:24px;} .intro-lead{font-size:14.5px;} .hero-visual{max-width:260px;margin-top:8px;}}
+
+  .quiz-wrap{padding:48px 0;}
+  .quiz-card{max-width:680px;margin:0 auto;background:#fff;border-radius:var(--radius-lg);box-shadow:var(--shadow-md);padding:36px;}
+  @media (max-width:640px){.quiz-wrap{padding:24px 0;} .quiz-card{padding:24px 20px;border-radius:16px;}}
+  .quiz-topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:13px;color:var(--muted);font-weight:500;}
+  .progress{height:6px;background:#EDF3FA;border-radius:6px;overflow:hidden;margin-bottom:28px;}
+  .progress-fill{height:100%;background:var(--blue);border-radius:6px;transition:width .35s ease;}
+  .quiz-q{font-size:22px;font-weight:600;color:var(--navy);margin:0 0 24px;line-height:1.38;}
+  @media (max-width:640px){.quiz-q{font-size:19px;}}
+  .opts{display:flex;flex-direction:column;gap:10px;}
+  .opt{display:flex;align-items:center;gap:14px;width:100%;text-align:left;min-height:56px;padding:14px 18px;background:#fff;border:1.5px solid var(--border);border-radius:12px;font-family:"Poppins",Arial,sans-serif;font-size:15px;color:var(--navy);cursor:pointer;transition:all .18s ease;line-height:1.4;}
+  .opt:hover{border-color:var(--sky);background:#F7FBFF;}
+  .opt:focus-visible{outline:3px solid var(--sky);outline-offset:2px;border-color:var(--blue);}
+  .opt .radio{width:20px;height:20px;border-radius:50%;border:2px solid var(--ice);flex-shrink:0;position:relative;transition:all .18s ease;}
+  .opt.selected{border-color:var(--blue);background:#EEF5FE;}
+  .opt.selected .radio{border-color:var(--blue);background:var(--blue);}
+  .opt.selected .radio::after{content:'';position:absolute;top:50%;left:50%;width:8px;height:8px;border-radius:50%;background:#fff;transform:translate(-50%,-50%);}
+  .opt-text{flex:1;}
+  .quiz-nav{display:flex;justify-content:flex-start;margin-top:18px;}
+
+  .processing-wrap{max-width:540px;margin:0 auto;padding:64px 20px;text-align:center;}
+  .processing-title{font-size:21px;font-weight:600;color:var(--navy);margin:0 0 8px;}
+  .processing-subtitle{font-size:13.5px;color:var(--muted);margin:0 0 30px;}
+  .proc-steps{display:flex;flex-direction:column;gap:10px;text-align:left;max-width:420px;margin:0 auto;}
+  .proc-step{display:flex;align-items:center;gap:14px;padding:13px 18px;background:#fff;border-radius:12px;border:1px solid var(--border);font-size:13.5px;color:var(--muted);transition:all .3s ease;}
+  .proc-step .indicator{width:22px;height:22px;border-radius:50%;flex-shrink:0;background:#EDF3FA;display:flex;align-items:center;justify-content:center;transition:all .3s ease;position:relative;color:#fff;font-size:11px;}
+  .proc-step .indicator i{font-size:10px;color:var(--muted);}
+  .proc-step.active .indicator i,.proc-step.done .indicator i{color:#fff;}
+  .proc-step.active{color:var(--navy);border-color:var(--sky);background:#F7FBFF;box-shadow:0 2px 10px rgba(0,114,206,.08);}
+  .proc-step.active .indicator{background:var(--blue);}
+  .proc-step.active .indicator::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:8px;height:8px;border-radius:50%;background:#fff;animation:pulse 1.2s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{opacity:.4;}50%{opacity:1;}}
+  .proc-step.done{color:var(--navy);border-color:var(--border);background:#F7FBFF;}
+  .proc-step.done .indicator{background:var(--navy);}
+  .proc-step.done .indicator::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-60%) rotate(45deg);width:5px;height:9px;border:solid #fff;border-width:0 2px 2px 0;}
+  .proc-progress-track{height:4px;background:#EDF3FA;border-radius:4px;overflow:hidden;max-width:420px;margin:22px auto 0;}
+  .proc-progress-fill{height:100%;background:linear-gradient(90deg,var(--sky),var(--blue));border-radius:4px;transition:width .4s ease;}
+
+  .lead-gate-wrap{padding:28px 0 60px;}
+  .lead-gate-card{max-width:560px;margin:0 auto;background:#fff;border-radius:var(--radius-lg);box-shadow:var(--shadow-md);padding:40px 36px;text-align:center;}
+  .lead-gate-eyebrow{font-size:12px;color:var(--blue);text-transform:uppercase;letter-spacing:.08em;font-weight:700;margin:0 0 14px;}
+  .lead-gate-title{font-family:"Poppins",Arial,sans-serif;font-size:24px;font-weight:600;color:var(--navy);line-height:1.3;margin:0 0 14px;}
+  .lead-gate-lead{font-size:14.5px;color:rgba(0,45,114,.72);line-height:1.6;margin:0 0 28px;}
+  .lead-gate-status{display:flex;align-items:center;justify-content:center;gap:10px;color:var(--navy);font-size:14.5px;font-weight:500;padding:20px 0;}
+  .lead-gate-status i{color:var(--blue);font-size:16px;}
+  .lead-gate-success{display:flex;align-items:center;justify-content:center;gap:10px;color:var(--navy);font-size:15.5px;font-weight:600;padding:20px 0;}
+  .lead-gate-success i{color:var(--blue);font-size:20px;}
+  .lead-gate-error-wrap{padding:8px 0;}
+  .lead-gate-error{color:var(--navy);font-size:14px;line-height:1.6;margin:0 0 18px;}
+  /* Botões da tela de lead gate (ex.: "Tentar novamente") usam o raio do formulário,
+     sem alterar o raio padrão de .btn usado no restante do site. */
+  #lead-form-section .btn{border-radius:var(--radius-form);}
+  @media (max-width:640px){.lead-gate-card{padding:28px 22px;} .lead-gate-title{font-size:20px;}}
+
+  /* ===== Formulário HubSpot (lead gate) — identidade visual Nibo =====
+     1) Variáveis oficiais do HubSpot Forms (--hsf-*), usadas pelo renderer
+        atual de formulários em HTML quando o portal já adota esse padrão.
+     2) Fallback com classes públicas do HubSpot (.hs-form, .hs-input etc.)
+        para portais/temas que ainda usam a marcação legada dos formulários.
+     Nada aqui altera campos, validações, consentimento, formId/portalId/
+     region, callback de sucesso ou fluxo de desbloqueio — só aparência. */
+  #diagnosisLeadForm{
+    --hsf-global__font-family:"Poppins",Arial,sans-serif;
+    --hsf-global__font-size:14px;
+    --hsf-global__color:#002D72;
+
+    --hsf-background__background-color:#FFFFFF;
+    --hsf-background__border-width:0;
+    --hsf-background__padding:0;
+
+    --hsf-row__vertical-spacing:18px;
+
+    --hsf-field-label__font-family:"Poppins",Arial,sans-serif;
+    --hsf-field-label__color:#002D72;
+    --hsf-field-description__color:#002D72;
+
+    --hsf-field-input__font-family:"Poppins",Arial,sans-serif;
+    --hsf-field-input__color:#002D72;
+    --hsf-field-input__background-color:#FFFFFF;
+    --hsf-field-input__placeholder-color:#B8CCEA;
+    --hsf-field-input__border-color:#B8CCEA;
+    --hsf-field-input__border-width:1px;
+    --hsf-field-input__border-style:solid;
+    --hsf-field-input__border-radius:var(--radius-form);
+    --hsf-field-input__padding:14px 16px;
+
+    --hsf-button__font-family:"Poppins",Arial,sans-serif;
+    --hsf-button__font-size:15px;
+    --hsf-button__color:#FFFFFF;
+    --hsf-button__background-color:#0072CE;
+    --hsf-button__border-radius:var(--radius-form);
+    --hsf-button__padding:15px 24px;
+    --hsf-button__box-shadow:none;
+
+    --hsf-richtext__font-family:"Poppins",Arial,sans-serif;
+    --hsf-richtext__color:#002D72;
+
+    text-align:left;
+  }
+  /* Fallback para marcação legada (portal sem suporte a --hsf-*) */
+  #diagnosisLeadForm .hs-form,
+  #diagnosisLeadForm form{background:transparent;border:0;box-shadow:none;padding:0;margin:0;text-align:left;}
+  #diagnosisLeadForm .hs-form-field{margin:0 0 var(--hsf-row__vertical-spacing,18px);text-align:left;}
+  #diagnosisLeadForm .hs-form-field label,
+  #diagnosisLeadForm label{
+    display:block;font-family:"Poppins",Arial,sans-serif;font-size:14px;font-weight:500;
+    color:#002D72;text-align:left;margin:0 0 6px;
+  }
+  #diagnosisLeadForm .hs-form-required{color:#0072CE;}
+  #diagnosisLeadForm .inputs-list{list-style:none;margin:6px 0 0;padding:0;text-align:left;}
+  #diagnosisLeadForm .hs-input,
+  #diagnosisLeadForm input[type="text"],
+  #diagnosisLeadForm input[type="email"],
+  #diagnosisLeadForm input[type="tel"],
+  #diagnosisLeadForm input[type="number"],
+  #diagnosisLeadForm select,
+  #diagnosisLeadForm textarea{
+    width:100%;font-family:"Poppins",Arial,sans-serif;font-size:14px;color:#002D72;
+    background-color:#FFFFFF;border:1px solid #B8CCEA;border-radius:var(--radius-form);padding:14px 16px;
+  }
+  #diagnosisLeadForm .hs-input::placeholder,
+  #diagnosisLeadForm input::placeholder,
+  #diagnosisLeadForm textarea::placeholder{color:#B8CCEA;}
+  #diagnosisLeadForm .hs-input:focus,
+  #diagnosisLeadForm input:focus,
+  #diagnosisLeadForm select:focus,
+  #diagnosisLeadForm textarea:focus{
+    border-color:#0072CE;outline:2px solid #41B6E6;outline-offset:2px;
+  }
+  #diagnosisLeadForm .hs-button,
+  #diagnosisLeadForm input[type="submit"],
+  #diagnosisLeadForm button[type="submit"]{
+    width:100%;display:block;font-family:"Poppins",Arial,sans-serif;font-size:15px;font-weight:600;
+    color:#FFFFFF;background-color:#0072CE;border:0;border-radius:var(--radius-form);padding:15px 24px;
+    box-shadow:none;cursor:pointer;transition:background-color .15s ease;
+  }
+  #diagnosisLeadForm .hs-button:hover,
+  #diagnosisLeadForm input[type="submit"]:hover,
+  #diagnosisLeadForm button[type="submit"]:hover{background-color:#002D72;}
+  #diagnosisLeadForm .hs-error-msgs{list-style:none;margin:6px 0 0;padding:0;text-align:left;}
+  #diagnosisLeadForm .hs-error-msgs label{color:#C0392B;font-size:12.5px;font-weight:500;}
+  #diagnosisLeadForm .hs-richtext{font-family:"Poppins",Arial,sans-serif;color:#002D72;text-align:left;}
+  @media (max-width:640px){#diagnosisLeadForm{--hsf-field-input__padding:13px 14px;}}
+
+  .result-wrap{padding:28px 0 60px;}
+  .result-toolbar{display:flex;justify-content:flex-end;gap:10px;margin-bottom:24px;align-items:center;}
+  @media (max-width:640px){.result-toolbar{flex-direction:column-reverse;align-items:stretch;} .result-toolbar .btn{width:100%;padding:14px;}}
+
+  .result-header{background:#fff;border-radius:var(--radius-lg);box-shadow:var(--shadow-md);padding:32px 36px;margin-bottom:24px;}
+  .result-title{font-size:12px;color:var(--blue);text-transform:uppercase;letter-spacing:.08em;font-weight:700;margin:0 0 14px;}
+  .result-h1{font-size:14.5px;color:var(--muted);font-weight:600;margin:0 0 6px;}
+  .result-level-name{font-size:26px;font-weight:600;color:var(--navy);margin:0 0 12px;line-height:1.2;}
+  .result-level-desc{font-size:15px;color:var(--muted);line-height:1.6;margin:0 0 20px;max-width:700px;}
+  .result-synth{font-size:14.5px;color:var(--navy);background:#F0F5FC;border-radius:10px;padding:14px 18px;line-height:1.6;margin:0 0 24px;max-width:760px;}
+  @media (max-width:640px){.result-header{padding:22px 20px;} .result-level-name{font-size:21px;}}
+
+  .scale{margin-top:16px;}
+  .scale-track{position:relative;height:8px;background:#E5EDF7;border-radius:999px;overflow:visible;margin-bottom:14px;}
+  .scale-fill{position:absolute;top:0;left:0;height:100%;background:#0072CE;border-radius:999px;}
+  .scale-marker{position:absolute;top:50%;transform:translate(-50%,-50%);width:20px;height:20px;border-radius:50%;background:var(--blue);border:3px solid #fff;box-shadow:0 0 0 2px var(--blue),0 2px 6px rgba(0,45,114,.25);z-index:2;}
+  .scale-labels{display:grid;grid-template-columns:repeat(4,1fr);font-size:11px;color:var(--muted);text-align:center;gap:4px;}
+  .scale-labels span{padding:0 4px;line-height:1.3;}
+  .scale-labels span.current{color:var(--navy);font-weight:600;}
+
+  .attention-block{
+    width:100%; box-sizing:border-box; margin-top:24px; padding:18px 20px;
+    background:#F0F5FC; border-left:4px solid var(--blue); border-radius:10px;
+  }
+  .attention-title{font-size:12px;color:var(--blue);text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin:0 0 8px;}
+  .attention-text{font-size:14.5px;color:var(--navy);line-height:1.6;margin:0;}
+  @media (max-width:640px){.attention-block{padding:16px 18px;}}
+  @media (max-width:640px){.scale-labels{font-size:10px;}}
+
+  .result-section{margin-bottom:28px;}
+  .section-h{font-size:17px;font-weight:600;color:var(--navy);margin:0 0 16px;line-height:1.3;}
+  @media (max-width:640px){.section-h{font-size:16px;}}
+  .section-h2{font-size:14.5px;font-weight:600;color:var(--navy);margin:26px 0 14px;line-height:1.3;}
+
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+
+  .strengths{display:flex;flex-direction:column;gap:12px;}
+  .scard{background:linear-gradient(180deg,#F0F8EE 0%,#FFFFFF 100%);border:1px solid #D6E9D2;border-left:4px solid var(--green);border-radius:var(--radius-md);padding:20px 24px;}
+  .scard-title{font-size:15px;font-weight:600;color:var(--navy);margin:0 0 8px;}
+  .scard-text{font-size:14px;color:var(--muted);line-height:1.6;margin:0;}
+
+  .priorities{display:flex;flex-direction:column;gap:16px;}
+  .pcard{background:#fff;border-radius:var(--radius-md);padding:26px;border:1px solid var(--border);box-shadow:var(--shadow-sm);border-left:5px solid var(--blue);}
+  .pcard.p1{border-left-color:var(--pink);background:linear-gradient(180deg,#FFF5FB 0%,#FFFFFF 55%);}
+  .pcard-head{display:flex;align-items:center;gap:14px;margin-bottom:8px;flex-wrap:wrap;}
+  .pcard-icon{width:40px;height:40px;border-radius:10px;background:#EEF5FE;display:flex;align-items:center;justify-content:center;color:var(--blue);flex-shrink:0;}
+  .pcard.p1 .pcard-icon{background:#FFEAF6;color:var(--pink);}
+  .pcard-icon svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;}
+  .pcard-badge{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--blue);padding:4px 10px;background:#EEF5FE;border-radius:100px;}
+  .pcard.p1 .pcard-badge{color:var(--pink);background:#FFEAF6;}
+  .pcard-pilar{font-size:13px;color:var(--muted);font-weight:500;}
+  .pcard-title{font-size:17px;font-weight:600;color:var(--navy);margin:8px 0 6px;line-height:1.3;}
+  .pcard-blocks{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:12px;}
+  @media (max-width:820px){.pcard-blocks{grid-template-columns:1fr;}}
+  .pblock{background:var(--bg);border-radius:10px;padding:14px 16px;}
+  .pblock-label{font-size:11px;text-transform:uppercase;letter-spacing:.06em;font-weight:700;color:var(--blue);margin:0 0 6px;}
+  .pcard.p1 .pblock-label{color:var(--pink);}
+  .pblock-text{font-size:13.5px;color:var(--text);line-height:1.55;margin:0;}
+  .pcard-blocked{margin-top:16px;padding:12px 14px;background:#FFF7E6;border-left:3px solid #F0A500;border-radius:8px;font-size:13px;color:#7A4E00;line-height:1.5;}
+  @media (max-width:640px){.pcard{padding:22px 20px;} .pcard-title{font-size:16px;}}
+
+  .plan{background:#fff;border-radius:var(--radius-md);padding:28px;border:1px solid var(--border);box-shadow:var(--shadow-sm);}
+  .plan-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
+  @media (max-width:820px){.plan-grid{grid-template-columns:1fr;gap:14px;}}
+  .plan-col{background:var(--bg);border-radius:12px;padding:20px 22px;}
+  .plan-col-title{display:flex;align-items:center;gap:10px;margin:0 0 14px;font-size:15px;font-weight:600;color:var(--navy);}
+  .plan-dot{width:12px;height:12px;border-radius:50%;background:var(--blue);flex-shrink:0;}
+  .plan-col:nth-child(1) .plan-dot{background:var(--pink);}
+  .plan-col:nth-child(2) .plan-dot{background:var(--blue);}
+  .plan-col:nth-child(3) .plan-dot{background:var(--navy);}
+  .plan-item{display:flex;align-items:flex-start;gap:10px;font-size:13.5px;line-height:1.5;color:var(--text);cursor:pointer;}
+  .plan-item input{margin:2px 0 0;width:18px;height:18px;accent-color:var(--blue);cursor:pointer;flex-shrink:0;}
+  .plan-item.checked > span{color:var(--muted);text-decoration:line-through;}
+  @media (max-width:640px){.plan{padding:20px;} .plan-col{padding:18px 20px;}}
+
+  .course-card{background:#fff;border-radius:var(--radius-md);padding:28px 32px;border:1px solid var(--border);box-shadow:var(--shadow-sm);display:flex;flex-wrap:wrap;gap:20px;align-items:center;justify-content:space-between;}
+  .course-info{flex:1;min-width:240px;}
+  .course-selo{font-size:11px;color:var(--blue);text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin:0 0 8px;}
+  .course-name{font-size:17px;font-weight:600;color:var(--navy);margin:0 0 8px;}
+  .course-desc{font-size:13.5px;color:var(--muted);line-height:1.6;margin:0;}
+  @media (max-width:640px){.course-card{padding:22px 20px;} .course-card .btn{width:100%;}}
+
+  .tech-cards-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:stretch;}
+  .tech-card2{background:#fff;border-radius:var(--radius-md);padding:24px 26px;border:1px solid var(--border);box-shadow:var(--shadow-sm);display:flex;flex-direction:column;}
+  .tech-card2-title{font-size:15.5px;font-weight:600;color:var(--navy);margin:0 0 10px;line-height:1.35;}
+  .tech-card2-text{font-size:13.5px;color:var(--muted);line-height:1.6;margin:0;}
+  @media (max-width:1024px){.tech-cards-grid{grid-template-columns:repeat(2,1fr);}}
+  @media (max-width:640px){.tech-cards-grid{grid-template-columns:1fr;} .tech-card2{padding:20px 22px;}}
+
+  .nibo-cta{background:linear-gradient(135deg,var(--navy) 0%,#003C93 100%);border-radius:var(--radius-lg);padding:44px 40px;color:#fff;text-align:center;margin-top:8px;}
+  .nibo-cta-tag{font-size:11px;color:var(--sky);text-transform:uppercase;letter-spacing:.1em;font-weight:700;margin:0 0 10px;}
+  .nibo-cta-title{font-size:21px;font-weight:600;color:#fff;margin:0 0 20px;line-height:1.3;}
+  .nibo-cta-body{font-size:15px;color:var(--ice);line-height:1.6;margin:0 auto 24px;max-width:560px;}
+  .nibo-cta a{display:inline-block;background:#fff;color:var(--navy);border:none;padding:14px 28px;font-size:15px;font-weight:600;border-radius:12px;font-family:"Poppins",Arial,sans-serif;cursor:pointer;transition:all .18s ease;text-decoration:none;}
+  .nibo-cta a:hover{background:var(--ice);}
+  .nibo-cta a:focus-visible{outline:3px solid var(--sky);outline-offset:3px;}
+  @media (max-width:640px){.nibo-cta{padding:32px 24px;} .nibo-cta-title{font-size:18px;} .nibo-cta a{width:100%;}}
+
+
+
+  .evaluation{background:#fff;border-radius:var(--radius-md);padding:26px 30px;border:1px solid var(--border);box-shadow:var(--shadow-sm);}
+  .eval-title{font-size:16px;font-weight:600;color:var(--navy);margin:0 0 16px;}
+  .eval-opts{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;}
+  .eval-opt{padding:10px 18px;border-radius:100px;border:1.5px solid var(--border);background:#fff;font-family:"Poppins",Arial,sans-serif;font-size:13.5px;color:var(--navy);cursor:pointer;transition:all .15s ease;}
+  .eval-opt:hover{border-color:var(--sky);}
+  .eval-opt.selected{border-color:var(--blue);background:#EEF5FE;}
+  .eval-followup{margin-top:14px;}
+  .eval-followup label{display:block;font-size:13px;color:var(--muted);margin-bottom:8px;}
+  .eval-followup textarea{width:100%;min-height:80px;border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;font-family:"Poppins",Arial,sans-serif;font-size:13.5px;resize:vertical;}
+  .eval-followup textarea:focus-visible{outline:3px solid var(--sky);}
+  .eval-confirm{font-size:13.5px;color:var(--green);font-weight:600;margin-top:14px;}
+
+  .hidden{display:none !important;}
+
+  /* Resume/completed modal */
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,45,114,.45);display:flex;align-items:center;justify-content:center;padding:20px;z-index:100;}
+  .modal-card{background:#fff;border-radius:var(--radius-lg);padding:32px;max-width:440px;width:100%;box-shadow:var(--shadow-md);}
+  .modal-title{font-size:19px;font-weight:600;color:var(--navy);margin:0 0 12px;}
+  .modal-body{font-size:14.5px;color:var(--muted);line-height:1.6;margin:0 0 24px;}
+  .modal-actions{display:flex;flex-direction:column;gap:10px;}
+  @media (max-width:640px){.modal-card{padding:24px;}}
+
+  .debug-panel{max-width:1080px;margin:24px auto 0;background:#0B1220;color:#B8CCEA;border-radius:12px;padding:20px 24px;font-family:monospace;font-size:12px;white-space:pre-wrap;line-height:1.6;}
+  .debug-panel h3{color:#fff;font-family:"Poppins",Arial,sans-serif;font-size:14px;margin:0 0 10px;}
+
+  @media print{
+    body{background:#fff;}
+    header,.result-toolbar,.plan-item input,.evaluation,.debug-panel{display:none !important;}
+    .page{padding:0;}
+      box-shadow:none !important;page-break-inside:avoid;break-inside:avoid;
+    }
+    .section-h,.pcard-title,.plan-col-title{page-break-after:avoid;break-after:avoid;}
+    .plan-grid,.pcard-blocks,.tech-cards-grid{grid-template-columns:1fr !important;}
+  }
+
+
+
+  /* ===== BPO Financeiro — blocos específicos (dimensões em barras, sem radar) ===== */
+  .dims-grid{display:flex;flex-direction:column;gap:16px;}
+  .dim-card{background:#fff;border-radius:var(--radius-md);padding:22px 26px;border:1px solid var(--border);box-shadow:var(--shadow-sm);}
+  .dim-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:10px;flex-wrap:wrap;}
+  .dim-name{font-size:15px;font-weight:600;color:var(--navy);}
+  .dim-meta{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted);font-weight:600;white-space:nowrap;}
+  .dim-status-tag{font-size:11px;text-transform:uppercase;letter-spacing:.05em;font-weight:700;padding:3px 10px;border-radius:100px;background:#EEF5FE;color:var(--blue);}
+  .dim-status-tag.atencao{background:#FFF1F1;color:#C0392B;}
+  .dim-status-tag.estrut{background:#FFF7E6;color:#8A5A00;}
+  .dim-status-tag.bem{background:#EEF5FE;color:var(--blue);}
+  .dim-status-tag.forte{background:#F0F8EE;color:var(--green);}
+  .dim-bar-track{height:10px;background:#EDF3FA;border-radius:8px;overflow:hidden;margin:12px 0;}
+  .dim-bar-fill{height:100%;border-radius:8px;background:var(--blue);transition:width .6s ease;}
+  .dim-text{font-size:13.5px;color:var(--text);line-height:1.6;margin:4px 0 0;}
+  @media (max-width:640px){.dim-card{padding:18px 20px;}}
+
+  .content-cards{display:flex;flex-direction:column;gap:14px;}
+  .content-card{background:#fff;border-radius:var(--radius-md);padding:22px 26px;border:1px solid var(--border);box-shadow:var(--shadow-sm);display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;}
+  .content-card-info{flex:1;min-width:220px;}
+  .content-card-tag{font-size:11px;color:var(--blue);text-transform:uppercase;letter-spacing:.05em;font-weight:700;margin:0 0 6px;}
+  .content-card-title{font-size:15px;font-weight:600;color:var(--navy);margin:0 0 8px;}
+  .content-card-reason{font-size:13.5px;color:var(--muted);line-height:1.55;margin:0;}
+  @media (max-width:640px){.content-card{padding:18px 20px;}}
+
+  .closing-banner{background:#F0F5FC;border-radius:var(--radius-md);padding:22px 26px;text-align:center;font-size:15.5px;color:var(--navy);font-weight:600;line-height:1.5;}
+
+  .profile-chip{display:inline-block;font-size:12px;color:var(--blue);background:#EEF5FE;padding:5px 12px;border-radius:100px;font-weight:700;letter-spacing:.02em;margin:0 0 12px;}
+
+  /* ===== Sumário clicável ===== */
+  .toc-card{background:#fff;border-radius:var(--radius-md);padding:20px 24px;border:1px solid var(--border);box-shadow:var(--shadow-sm);margin-bottom:28px;}
+  .toc-title{font-size:12px;color:var(--blue);text-transform:uppercase;letter-spacing:.08em;font-weight:700;margin:0 0 12px;}
+  .toc-list{display:flex;flex-wrap:wrap;gap:10px;list-style:none;margin:0;padding:0;}
+  .toc-list a{font-size:13.5px;font-weight:600;color:var(--navy);text-decoration:none;padding:8px 14px;background:#F0F5FC;border-radius:100px;display:inline-block;transition:background .15s ease;}
+  .toc-list a:hover{background:#E3EEFB;}
+  @media (max-width:640px){.toc-card{padding:16px 18px;} .toc-list a{font-size:13px;padding:7px 12px;}}
+
+  /* ===== Gráfico aranha / radar (reaproveitado do Diagnóstico de Gestão Financeira) ===== */
+  .radar-card{background:#fff;border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);padding:32px;border:1px solid #E5EDF7;display:flex;flex-direction:column;align-items:center;}
+  .radar-chart-wrap{width:100%;max-width:620px;margin:0 auto;}
+  .radar-chart{width:100%;height:auto;display:block;}
+  .radar-chart :focus,.radar-point:focus{outline:none;}
+  .radar-point.focused,.radar-point:hover{r:8;transition:r .15s ease;}
+  .radar-help{font-size:13px;color:#002D72;text-align:center;margin:18px 0 0;max-width:480px;line-height:1.55;}
+  @media (max-width:640px){.radar-card{padding:20px 16px;}}
+  @media (prefers-reduced-motion: reduce){.radar-point{transition:none !important;}}
+
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <span style="font-family:'Poppins',Arial,sans-serif;font-weight:700;font-size:20px;color:var(--navy);letter-spacing:-.02em;">nibo</span>
+  </div>
+  <span class="tag">Diagnóstico de BPO Financeiro</span>
+</header>
+
+<div class="page">
+
+  <section id="intro-section" class="intro-wrap">
+    <div class="intro-grid">
+      <div class="intro">
+        <h1>Seu BPO Financeiro está pronto para crescer?</h1>
+        <p class="intro-lead">Responda 10 perguntas e descubra os principais gargalos da sua operação e o que priorizar para conquistar mais clientes, aumentar a produtividade e crescer com retorno.</p>
+        <button class="btn btn-primary" id="start-btn" type="button">Começar diagnóstico</button>
+        <div class="intro-benefits" aria-label="Benefícios do diagnóstico">
+          <span class="benefit"><span class="chip"><i class="fa-regular fa-clock" aria-hidden="true"></i></span>Cerca de 3 minutos</span>
+          <span class="benefit"><span class="chip"><i class="fa-solid fa-chart-line" aria-hidden="true"></i></span>Diagnóstico personalizado</span>
+          <span class="benefit"><span class="chip"><i class="fa-solid fa-bullseye" aria-hidden="true"></i></span>Gargalos e prioridades</span>
+          <span class="benefit"><span class="chip"><i class="fa-solid fa-list-check" aria-hidden="true"></i></span>Plano prático para crescer</span>
+        </div>
+      </div>
+      <div class="hero-visual-col">
+        <div class="hero-visual" aria-hidden="true">
+          <svg viewBox="0 0 400 320" style="width:100%;height:auto;">
+            <rect x="30" y="200" width="60" height="90" rx="8" fill="#B8CCEA"/>
+            <rect x="110" y="150" width="60" height="140" rx="8" fill="#41B6E6"/>
+            <rect x="190" y="90" width="60" height="200" rx="8" fill="#0072CE"/>
+            <rect x="270" y="40" width="60" height="250" rx="8" fill="#002D72"/>
+            <circle cx="200" cy="30" r="16" fill="#FF40B3"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="quiz-section" class="hidden quiz-wrap" aria-label="Questionário">
+    <div id="quiz"></div>
+  </section>
+
+  <section id="processing-section" class="hidden" aria-label="Processando resultado">
+    <div id="processing"></div>
+  </section>
+
+  <section id="lead-form-section" class="hidden lead-gate-wrap" aria-label="Formulário para liberar o resultado completo"></section>
+
+  <section id="result-section" class="hidden result-wrap" aria-label="Resultado do diagnóstico">
+    <div class="result-toolbar">
+      <button class="btn btn-ghost" id="restart-btn" type="button">↻ Refazer diagnóstico</button>
+    </div>
+    <div id="result-content"></div>
+  </section>
+
+</div>
+
+<div id="modal-root"></div>
+
+<script>
+const HUBSPOT_PORTAL_ID = "1554114";
+const HUBSPOT_FORM_ID = "89105d5c-7f26-4ca5-84cc-d14869941ed0";
+const HUBSPOT_REGION = "na1";
+const SALES_URL = "INSERIR_URL_AQUI"; // TODO: substituir pela URL de contato com Vendas (Falar com um especialista)
+const STORAGE_KEY = "nibo_diagnostico_bpo_progress_v1";
+const AI_ENDPOINT = "/api/diagnostico"; // função server-side (Vercel) — enriquecimento opcional via IA
+const AI_TIMEOUT_MS = 9000;
+
+// ---------- MODO DE TESTE (temporário) ----------
+// Quando TEST_MODE = true: pula o formulário HubSpot e libera o resultado direto após o processamento.
+// Nenhuma conversão falsa é enviada ao HubSpot e leadUnlocked não é marcado como verdadeiro.
+// Antes de publicar em produção, alterar para: const TEST_MODE = false;
+const TEST_MODE = true;
+
+// ---------- Perguntas (fonte de verdade: controle-diagnostico-bpo-financeiro-v3.xlsx) ----------
+const QUESTIONS = [
+  { id:'q1', perfil:true, q:"Quantos clientes sua operação atende hoje?", opts:[
+    "Ainda não tenho clientes",
+    "1 a 4 clientes",
+    "5 a 15 clientes",
+    "Mais de 15 clientes"
+  ]},
+  { id:'q2', dims:['OP'], weight:1.0, q:"Como você acompanha as demandas dos clientes?", opts:[
+    "Uso principalmente mensagens, anotações ou planilhas.",
+    "Tenho controles organizados, mas preciso consultar vários lugares.",
+    "A maior parte das demandas está organizada em um só processo.",
+    "Tenho uma visão centralizada das pendências, prioridades e responsáveis."
+  ]},
+  { id:'q3', dims:['OP','ESC'], weight:1.2, q:"Seus processos são padronizados?", opts:[
+    "Não. Cada cliente funciona de um jeito.",
+    "Tenho alguns padrões, mas muitas atividades ainda variam.",
+    "A maior parte das rotinas segue processos definidos.",
+    "Os processos são padronizados e fáceis de replicar para novos clientes."
+  ]},
+  { id:'q4', dims:['ESC'], weight:1.2, q:"Quanto da rotina ainda é manual?", opts:[
+    "Quase tudo depende da equipe.",
+    "Algumas etapas são automatizadas, mas ainda há bastante trabalho manual.",
+    "Boa parte das tarefas repetitivas já foi automatizada.",
+    "A automação faz parte da rotina e a equipe consegue focar mais em análise e atendimento."
+  ]},
+  { id:'q5', dims:['OP','VAL'], weight:0.8, q:"Como os clientes enviam documentos e informações?", opts:[
+    "Por vários canais, como WhatsApp pessoal, e-mail e Drive.",
+    "Temos canais definidos, mas as informações ainda ficam espalhadas.",
+    "A maior parte chega por canais organizados.",
+    "Documentos, mensagens e solicitações ficam centralizados para a equipe."
+  ]},
+  { id:'q6', dims:['OP','VAL'], weight:1.0, q:"Você consegue acompanhar a situação financeira dos clientes com facilidade?", opts:[
+    "Não. Preciso reunir informações de vários lugares.",
+    "Consigo, mas normalmente preciso conferir ou ajustar os dados antes.",
+    "Tenho acesso rápido às principais informações financeiras.",
+    "Consigo acompanhar caixa, pagamentos, recebimentos e resultados de forma organizada e atualizada."
+  ]},
+  { id:'q7', dims:['CR'], weight:1.2, q:"Você sabe se o valor cobrado compensa o trabalho de cada cliente?", opts:[
+    "Não acompanho isso de forma estruturada.",
+    "Tenho uma percepção de quais clientes dão mais trabalho.",
+    "Comparo o esforço de atendimento com o valor cobrado.",
+    "Acompanho essa relação por cliente e uso a informação para ajustar preços e decisões."
+  ]},
+  { id:'q8', dims:['CR'], weight:1.0, q:"Como você conquista novos clientes?", opts:[
+    "Principalmente por indicação.",
+    "Faço algumas ações comerciais, mas sem frequência.",
+    "Tenho canais e uma abordagem comercial definidos.",
+    "Tenho um processo comercial recorrente e acompanho os resultados."
+  ]},
+  { id:'q9', dims:['VAL'], weight:0.8, q:"O que seus clientes recebem além da execução financeira?", opts:[
+    "Nada além das entregas operacionais do dia a dia.",
+    "Relatórios e informações quando solicitado.",
+    "Acompanhamentos que ajudam o cliente a entender melhor os números.",
+    "Análises e informações que apoiam decisões do negócio."
+  ]},
+  { id:'q10', dims:['ESC','CR'], weight:1.8, q:"Você conseguiria atender mais clientes com a equipe atual?", opts:[
+    "Não. Para crescer, provavelmente precisaria contratar logo.",
+    "Um pouco, mas a operação ficaria sobrecarregada.",
+    "Sim, ainda temos alguma capacidade para crescer.",
+    "Sim. Nossos processos e tecnologia permitem aumentar a carteira sem aumentar a equipe na mesma proporção."
+  ]}
+];
+
+const SCORE_QUESTIONS = QUESTIONS.filter(q => !q.perfil);
+const WEIGHT_SUM = SCORE_QUESTIONS.reduce((s,q)=>s+q.weight,0); // = 10, máx ponderado = 30
+
+const DIMENSIONS = {
+  OP:  { id:'OP',  title:'Operação e controle',            questions:['q2','q3','q5','q6'], desc:'Como demandas, processos e informações da carteira são organizados.' },
+  ESC: { id:'ESC', title:'Produtividade e escala',          questions:['q3','q4','q10'],     desc:'Quanto a rotina depende de tarefas manuais e quanto consegue crescer com a estrutura atual.' },
+  CR:  { id:'CR',  title:'Crescimento e retorno da operação', questions:['q7','q8','q10'],   desc:'Como novos clientes entram e se o valor cobrado acompanha o esforço necessário para atendê-los.' },
+  VAL: { id:'VAL', title:'Valor entregue ao cliente',       questions:['q5','q6','q9'],      desc:'O quanto a entrega vai além da execução e ajuda o cliente a acompanhar e entender suas finanças.' }
+};
+const DIM_ORDER = ['OP','ESC','CR','VAL'];
+
+const LEVELS = [
+  { idx:0, min:0,  max:34,  nome:'Operação dependente',
+    texto:'Sua operação ainda depende muito da equipe para crescer. Processos manuais, controles separados ou pouca previsibilidade podem fazer cada novo cliente também representar mais trabalho e custo.' },
+  { idx:1, min:35, max:59,  nome:'Operação em estruturação',
+    texto:'Você já construiu uma base importante, mas alguns gargalos podem limitar o crescimento. A operação precisa ganhar consistência, produtividade ou previsibilidade para aumentar a carteira com mais segurança.' },
+  { idx:2, min:60, max:79,  nome:'Operação preparada para crescer',
+    texto:'Sua operação já tem uma boa estrutura para aumentar a carteira. O próximo passo é trabalhar os pontos que ainda limitam produtividade, retorno ou aquisição de clientes.' },
+  { idx:3, min:80, max:100, nome:'Operação escalável',
+    texto:'Sua operação combina organização, processos, produtividade e visão de negócio. O desafio passa a ser aproveitar essa estrutura para aumentar carteira, retorno e valor entregue sem perder eficiência.' }
+];
+
+function classifica(score){
+  if (score < 35) return 0;
+  if (score < 60) return 1;
+  if (score < 80) return 2;
+  return 3;
+}
+function statusLabel(idx){
+  return ['Precisa de atenção','Em estruturação','Bem estruturada','Ponto forte'][idx];
+}
+function statusClass(idx){
+  return ['atencao','estrut','bem','forte'][idx];
+}
+
+// ---------- Biblioteca (fallback aprovado — usada quando a IA não responde) ----------
+const LVL_FALLBACK = {
+  0:{ titulo:'Operação dependente', acao:'Priorizar organização da base e capacidade antes de acelerar crescimento.' },
+  1:{ titulo:'Operação em estruturação', acao:'Trabalhar os dois gargalos de menor score.' },
+  2:{ titulo:'Operação preparada para crescer', acao:'Focar menor dimensão e monitorar capacidade.' },
+  3:{ titulo:'Operação escalável', acao:'Conectar capacidade a metas comerciais e melhoria contínua.' }
+};
+
+const DIM_FALLBACK = {
+  OP: [
+    'Demandas, processos ou informações ainda dependem de controles dispersos. Isso aumenta o esforço para acompanhar a carteira e pode gerar retrabalho ou perda de contexto.',
+    'Você já possui controles e alguns padrões, mas ainda precisa consultar diferentes lugares ou lidar com exceções frequentes. A próxima evolução é consolidar a visão da carteira e tornar os processos mais replicáveis.',
+    'Sua operação já tem uma boa base de organização e processos definidos. O ganho agora está em aumentar a centralização, reduzir exceções e usar a visibilidade da carteira para priorizar melhor.',
+    'A operação demonstra boa centralização, processos replicáveis e clareza para acompanhar a carteira. Essa base favorece consistência e crescimento com mais controle.'
+  ],
+  ESC: [
+    'A rotina ainda depende bastante da execução manual e há pouca folga para absorver novos clientes. Crescer agora tende a pressionar equipe, custo e qualidade.',
+    'Sua operação já simplificou algumas etapas, mas parte relevante do trabalho ainda cresce junto com a carteira. Há oportunidade de ganhar capacidade antes de acelerar o volume de clientes.',
+    'A operação já conta com processos e automações que aliviam tarefas repetitivas e ainda possui alguma capacidade para crescer. O próximo passo é medir gargalos e proteger essa folga conforme a carteira aumenta.',
+    'Processos e tecnologia já ajudam a operação a crescer sem aumentar a equipe na mesma proporção. Essa é uma base importante para transformar capacidade operacional em crescimento sustentável.'
+  ],
+  CR: [
+    'A entrada de novos clientes é pouco previsível e/ou ainda falta clareza sobre a relação entre o esforço de atendimento e o valor cobrado. Isso pode fazer a carteira crescer sem melhorar o retorno da operação.',
+    'Você já possui algumas práticas comerciais ou de acompanhamento de preço x esforço, mas elas ainda não formam um processo consistente. O foco deve ser transformar percepção em acompanhamento recorrente.',
+    'Sua operação já tem uma base comercial definida e/ou critérios para avaliar o esforço dos contratos. Há espaço para aumentar previsibilidade e conectar melhor metas de aquisição à capacidade e ao retorno esperado.',
+    'A operação demonstra boa previsibilidade comercial e acompanha a relação entre o trabalho exigido e o valor cobrado. Isso ajuda a crescer com mais critério e proteger o retorno da carteira.'
+  ],
+  VAL: [
+    'A entrega ainda é muito operacional ou reativa, e as informações podem não estar organizadas de forma a tornar o valor do serviço evidente. Isso pode dificultar diferenciação e retenção.',
+    'Seu cliente já recebe informações e relatórios, mas parte do valor ainda depende de solicitações ou de iniciativas pontuais. Há espaço para tornar a entrega mais proativa e consistente.',
+    'Você já ajuda o cliente a acompanhar e entender melhor os números. O próximo passo é manter uma rotina consistente e tornar as informações cada vez mais acionáveis para o negócio.',
+    'A entrega vai além da execução e transforma informações financeiras em apoio para decisões. Isso aumenta a percepção de valor e diferencia a operação.'
+  ]
+};
+
+// Ações permitidas (Biblioteca_IA) por dimensão — usadas no plano 7/30/90 e nas prioridades
+const ACTIONS = {
+  OP: [
+    { titulo:'Centralizar a visão da carteira', texto:'Mapear onde as demandas chegam; escolher uma fonte principal; definir status e responsáveis; reduzir controles paralelos.' },
+    { titulo:'Padronizar processos recorrentes', texto:'Listar rotinas comuns; documentar padrão mínimo; definir exceções; revisar onboarding.' }
+  ],
+  ESC: [
+    { titulo:'Reduzir dependência de tarefas manuais', texto:'Listar tarefas repetitivas; estimar frequência/esforço; priorizar automação/simplificação; medir capacidade liberada.' },
+    { titulo:'Ganhar capacidade antes de acelerar a carteira', texto:'Identificar gargalo principal; revisar distribuição; padronizar/automatizar; acompanhar capacidade antes de aumentar volume.' }
+  ],
+  CR: [
+    { titulo:'Tornar a aquisição mais previsível', texto:'Definir perfil de cliente ideal; refinar proposta de valor; escolher canal recorrente; acompanhar oportunidades/conversão.' },
+    { titulo:'Acompanhar preço x esforço', texto:'Selecionar amostra de clientes; registrar esforço/complexidade; comparar com valor cobrado; revisar escopo/preço com critérios.' }
+  ],
+  VAL: [
+    { titulo:'Tornar o valor mais visível', texto:'Definir uma cadência de acompanhamento; destacar informações úteis; contextualizar números; registrar próximos passos com o cliente.' },
+    { titulo:'Aumentar confiabilidade e acesso às informações', texto:'Organizar fonte de dados; criar rotina de atualização/conferência; padronizar relatórios essenciais.' }
+  ]
+};
+
+// ---------- Biblioteca de conteúdos ----------
+const CONTENT_LIBRARY = {
+  CURSO_BPO: {
+    id:'CURSO_BPO', nome:'BPO Financeiro na prática',
+    url:'https://conteudo.nibo.com.br/curso-bpofinanceiro-na-pratica-nibo',
+    cta:'Acessar curso', selo:'Curso online',
+    reason:'Cobre operação, automação e escala — indicado quando produtividade/processos precisam evoluir.'
+  },
+  SCRIPTS_VENDAS: {
+    id:'SCRIPTS_VENDAS', nome:'Scripts de vendas para BPO Financeiro',
+    url:'https://conteudo.nibo.com.br/ebook-scripts-venda-bpo-financeiro',
+    cta:'Acessar e-book', selo:'E-book',
+    reason:'Ajuda a estruturar abordagem, negociação e conversão de novos clientes.'
+  },
+  PROPOSTA_COMERCIAL: {
+    id:'PROPOSTA_COMERCIAL', nome:'Modelo de proposta comercial para BPO Financeiro',
+    url:'https://conteudo.nibo.com.br/proposta-comercial-bpo',
+    cta:'Baixar modelo de proposta', selo:'Modelo',
+    reason:'Apoia propostas mais claras e profissionais, facilitando o fechamento.'
+  },
+  CONTRATO_BPO: {
+    id:'CONTRATO_BPO', nome:'Modelo de contrato de BPO Financeiro',
+    url:'https://conteudo.nibo.com.br/modelo-de-contrato-bpo',
+    cta:'Acessar modelo de contrato', selo:'Modelo',
+    reason:'Complementa a padronização da operação formalizando escopo e responsabilidades.'
+  },
+  GUIA_GOOGLE: {
+    id:'GUIA_GOOGLE', nome:'Guia Prático: Google Meu Negócio para BPO Financeiro',
+    url:'https://conteudo.nibo.com.br/guia-google-bpo-financeiro',
+    cta:'Acessar guia', selo:'Guia',
+    reason:'Aumenta visibilidade e geração de demanda para quem ainda depende de indicação.'
+  }
+};
+
+// ---------- Capacidades Nibo BPO permitidas na ponte comercial ----------
+const NIBO_CAPABILITIES = {
+  OP: [
+    { titulo:'Painel de controle centralizado', texto:'Acompanhar status dos clientes e gerir a operação em um só lugar.' },
+    { titulo:'Caixa de Entrada integrada', texto:'Receber e organizar documentos vindos de canais integrados e fazer a triagem dentro do Nibo.' },
+    { titulo:'WhatsApp BPO integrado', texto:'Centralizar atendimentos, mensagens e documentos do WhatsApp dentro da operação de BPO.' }
+  ],
+  ESC: [
+    { titulo:'Automação de agendamentos', texto:'Automatizar o agendamento de lançamentos financeiros a partir de documentos recebidos.' },
+    { titulo:'Conciliação e integrações bancárias', texto:'Usar integração bancária e conciliação para tornar a rotina financeira mais eficiente.' }
+  ],
+  VAL: [
+    { titulo:'Gestão financeira integrada dos clientes', texto:'Realizar a gestão financeira dos clientes com recursos de contas, fluxo de caixa e relatórios.' },
+    { titulo:'Relatórios e fluxo de caixa', texto:'Acompanhar fluxo de caixa e relatórios gerenciais para apoiar a leitura financeira do cliente.' }
+  ],
+  CR: [
+    { titulo:'Painel de controle centralizado', texto:'Acompanhar status dos clientes e capacidade da operação em um só lugar para planejar o crescimento da carteira.' }
+  ]
+};
+
+// ================= MOTOR DETERMINÍSTICO (código decide: pontos, pesos, score, nível, travas, dimensões) =================
+
+function computeResult(answers){
+  // answers: { q1:0..3, q2:0..3, ..., q10:0..3 }  (índice 0=A,1=B,2=C,3=D)
+
+  // 1) Score geral ponderado (Q1 não pontua)
+  let weighted = 0;
+  SCORE_QUESTIONS.forEach(q => { weighted += answers[q.id] * q.weight; });
+  const overall = Math.round((weighted / 30 * 100) * 10) / 10;
+  let levelIdx = classifica(overall);
+
+  // 2) Dimensões — média simples das perguntas associadas (0-3 -> 0-100)
+  const dimScores = {};
+  DIM_ORDER.forEach(dkey => {
+    const qs = DIMENSIONS[dkey].questions;
+    const sum = qs.reduce((s,qid)=> s + answers[qid], 0);
+    const avg = sum / qs.length;
+    dimScores[dkey] = Math.round((avg/3*100)*10)/10;
+  });
+  const dimStatus = {};
+  DIM_ORDER.forEach(dkey => { dimStatus[dkey] = classifica(dimScores[dkey]); });
+
+  // 3) Travas críticas (nível final)
+  const rules = { R1:false, R2:false, R3:false, R4:false, R5:false, R6:false, R7:false, R8:false };
+  if (answers.q10 === 0) { rules.R1 = true; levelIdx = Math.min(levelIdx, 1); }
+  if (answers.q3 === 0 && answers.q4 === 0) { rules.R2 = true; levelIdx = Math.min(levelIdx, 1); }
+  if (answers.q2 === 0 && answers.q5 === 0) rules.R3 = true;
+  if (answers.q7 === 0) rules.R4 = true;
+  if (answers.q8 === 0) rules.R5 = true;
+  if (answers.q1 === 2 || answers.q1 === 3) rules.R6 = true; // perfil prioritário (5+ clientes)
+  if (answers.q9 === 0) rules.R7 = true;
+  if (answers.q4 === 0 && (answers.q10 === 0 || answers.q10 === 1)) rules.R8 = true;
+
+  // 4) Prioridades: menor dimensão = principal; segunda menor = próximo ponto; maior = ponto forte
+  const sortedDims = [...DIM_ORDER].sort((a,b)=> dimScores[a]-dimScores[b]);
+  let mainPriority = sortedDims[0];
+  let secondPriority = sortedDims[1];
+  if (rules.R3 && mainPriority !== 'OP') {
+    // Operação e controle vira prioridade principal forçada
+    secondPriority = mainPriority;
+    mainPriority = 'OP';
+  }
+  const strongestDim = sortedDims[sortedDims.length-1];
+
+  // 5) Terceira prioridade (alerta), se houver espaço e não duplicar as duas primeiras
+  let thirdPriority = null;
+  const usedDims = [mainPriority, secondPriority];
+  if (rules.R8 && !usedDims.includes('ESC')) thirdPriority = 'ESC';
+  else if (rules.R7 && !usedDims.includes('VAL')) thirdPriority = 'VAL';
+  else if (rules.R4 && !usedDims.includes('CR')) thirdPriority = 'CR';
+
+  const priorityDims = [mainPriority, secondPriority];
+  if (thirdPriority) priorityDims.push(thirdPriority);
+
+  // 6) Ponto forte / "melhor base hoje" — evidência C/D nas perguntas da dimensão mais alta
+  const strongQs = DIMENSIONS[strongestDim].questions;
+  const hasStrongEvidence = strongQs.some(qid => answers[qid] >= 2) && dimStatus[strongestDim] >= 2;
+
+  // 7) Conteúdos elegíveis (código escolhe; IA apenas explica)
+  const selectedContentIds = selectContent(answers, dimScores, priorityDims);
+
+  // 8) Capacidades Nibo elegíveis (até 3)
+  const allowedNiboCapabilities = selectNiboCapabilities(priorityDims, answers);
+
+  // 9) Contexto de carteira (Q1) — não altera score
+  const portfolioContext = ['Ainda não tenho clientes','1 a 4 clientes','5 a 15 clientes','Mais de 15 clientes'][answers.q1];
+
+  return {
+    answers, overall, levelIdx, level: LEVELS[levelIdx],
+    dimScores, dimStatus, rules,
+    mainPriority, secondPriority, thirdPriority, priorityDims,
+    strongestDim, hasStrongEvidence,
+    selectedContentIds, allowedNiboCapabilities,
+    portfolioContext
+  };
+}
+
+function selectContent(answers, dimScores, priorityDims){
+  const ids = [];
+  const add = (id) => { if (!ids.includes(id) && ids.length < 3) ids.push(id); };
+
+  const aquisicaoFraca = (answers.q8 === 0 || answers.q8 === 1);
+  const operOuEscBaixa = dimScores.OP < 60 || dimScores.ESC < 60;
+  const crBaixa = dimScores.CR < 60;
+
+  if (aquisicaoFraca && (priorityDims.includes('CR') || crBaixa)) {
+    // priorizar geração de demanda + conversão
+    if (answers.q8 === 0) { add('GUIA_GOOGLE'); add('SCRIPTS_VENDAS'); }
+    else { add('SCRIPTS_VENDAS'); add('PROPOSTA_COMERCIAL'); }
+    if (priorityDims[0] === 'CR') add('PROPOSTA_COMERCIAL');
+  }
+
+  if (operOuEscBaixa) {
+    add('CURSO_BPO');
+    if ((answers.q3 === 0 || answers.q3 === 1) || answers.q1 >= 2) add('CONTRATO_BPO');
+  }
+
+  if (answers.q7 <= 1 && !aquisicaoFraca) {
+    add('CURSO_BPO');
+    add('PROPOSTA_COMERCIAL');
+  }
+
+  if (ids.length === 0) {
+    // resultado alto — conteúdo alinhado à menor dimensão
+    const lowest = priorityDims[0];
+    if (lowest === 'CR') { add('SCRIPTS_VENDAS'); add('PROPOSTA_COMERCIAL'); }
+    else add('CURSO_BPO');
+  }
+
+  return ids.slice(0,3);
+}
+
+function selectNiboCapabilities(priorityDims, answers){
+  const picked = [];
+  const addAll = (arr) => { arr.forEach(c => { if (picked.length < 3 && !picked.some(p=>p.titulo===c.titulo)) picked.push(c); }); };
+  priorityDims.forEach(dkey => { if (picked.length < 3) addAll(NIBO_CAPABILITIES[dkey] || []); });
+  if (picked.length < 3) addAll(NIBO_CAPABILITIES.OP);
+  return picked.slice(0,3);
+}
+
+// ---------- Textos determinísticos (fallback aprovado) — usados enquanto a IA não responde / se falhar ----------
+
+function buildFallbackNarrative(r){
+  const lvlText = LEVELS[r.levelIdx].texto;
+  const ctxText = contextText(r);
+  return `${lvlText} ${ctxText}`;
+}
+
+function contextText(r){
+  switch(r.answers.q1){
+    case 0: return 'Como você ainda não tem clientes, este é o momento certo para estruturar a base — processos, controles e forma de atendimento — antes de acelerar a captação.';
+    case 1: return 'Com uma carteira inicial, este é um bom momento para organizar processos antes que o crescimento aumente a complexidade da operação.';
+    case 2: return 'Com uma carteira já relevante, os gargalos identificados tendem a se repetir em vários clientes ao mesmo tempo — o que reforça a importância de agir sobre eles agora.';
+    case 3: return 'Com uma carteira maior, pequenos gargalos tendem a gerar impacto relevante em escala — por isso produtividade, centralização e capacidade merecem atenção prioritária.';
+    default: return '';
+  }
+}
+
+function dimFallbackText(dkey, statusIdx){
+  return DIM_FALLBACK[dkey][statusIdx];
+}
+
+function priorityFallback(dkey, r){
+  const acts = ACTIONS[dkey];
+  const status = r.dimStatus[dkey];
+  const title = dkey === 'OP' ? 'Centralizar operação e processos'
+    : dkey === 'ESC' ? 'Ganhar capacidade e reduzir trabalho manual'
+    : dkey === 'CR' ? 'Tornar aquisição e retorno mais previsíveis'
+    : 'Tornar o valor entregue mais visível';
+  return {
+    title,
+    identified: DIM_FALLBACK[dkey][status],
+    why: dkey === 'OP' ? 'Sem uma base centralizada, cada cliente adicional aumenta o esforço de gestão e o risco de retrabalho.'
+       : dkey === 'ESC' ? 'Quando a rotina depende de trabalho manual, crescer a carteira tende a exigir mais equipe e custo na mesma proporção.'
+       : dkey === 'CR' ? 'Sem previsibilidade comercial ou clareza sobre esforço x preço, a carteira pode crescer sem melhorar o retorno da operação.'
+       : 'Uma entrega apenas operacional dificulta a diferenciação e pode limitar a retenção de clientes.',
+    action_now: acts[0].texto
+  };
+}
+
+// ---------- Chamada opcional à IA (arquitetura híbrida — fallback determinístico sempre garante o resultado) ----------
+
+async function tryEnhanceWithAI(r){
+  const payload = {
+    answers: r.answers,
+    overall_score: r.overall,
+    final_level: r.level.nome,
+    portfolio_context: r.portfolioContext,
+    dimensions: Object.fromEntries(DIM_ORDER.map(d => [d, { score: r.dimScores[d], status: statusLabel(r.dimStatus[d]) }])),
+    main_priority: DIMENSIONS[r.mainPriority].title,
+    second_priority: DIMENSIONS[r.secondPriority].title,
+    third_priority: r.thirdPriority ? DIMENSIONS[r.thirdPriority].title : null,
+    strongest_dimension: DIMENSIONS[r.strongestDim].title,
+    alerts: Object.entries(r.rules).filter(([k,v])=>v).map(([k])=>k),
+    selected_content_ids: r.selectedContentIds,
+    allowed_nibo_capabilities: r.allowedNiboCapabilities.map(c=>c.titulo)
+  };
+  try{
+    const controller = new AbortController();
+    const timeout = setTimeout(()=>controller.abort(), AI_TIMEOUT_MS);
+    const resp = await fetch(AI_ENDPOINT, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(payload),
+      signal: controller.signal
+    });
+    clearTimeout(timeout);
+    if (!resp.ok) return null;
+    const data = await resp.json();
+    if (!data || typeof data !== 'object') return null;
+    return data;
+  }catch(err){
+    console.warn('IA indisponível — usando resultado determinístico.', err);
+    return null;
+  }
+}
+
+// ================= ESTADO E PERSISTÊNCIA (sem PII em localStorage) =================
+
+let state = {
+  step: 'intro', // intro | quiz | processing | lead | result
+  qIndex: 0,
+  answers: {},
+  result: null,
+  aiData: null
+};
+
+function safeGet(key){ try{ return localStorage.getItem(key); }catch(e){ return null; } }
+function safeSet(key,val){ try{ localStorage.setItem(key,val); }catch(e){} }
+function safeRemove(key){ try{ localStorage.removeItem(key); }catch(e){} }
+
+function saveProgress(){
+  const toSave = { qIndex: state.qIndex, answers: state.answers, step: state.step, leadUnlocked: state.leadUnlocked || false };
+  safeSet(STORAGE_KEY, JSON.stringify(toSave));
+}
+function loadProgress(){
+  const raw = safeGet(STORAGE_KEY);
+  if (!raw) return null;
+  try{ return JSON.parse(raw); }catch(e){ return null; }
+}
+function clearProgress(){ safeRemove(STORAGE_KEY); }
+
+// ================= NAVEGAÇÃO ENTRE TELAS =================
+
+function showSection(id){
+  ['intro-section','quiz-section','processing-section','lead-form-section','result-section'].forEach(sid=>{
+    document.getElementById(sid).classList.toggle('hidden', sid !== id);
+  });
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+document.getElementById('start-btn').addEventListener('click', () => {
+  const saved = loadProgress();
+  if (saved && saved.qIndex > 0 && Object.keys(saved.answers||{}).length > 0 && !saved.leadUnlocked){
+    showResumeModal(saved);
+  } else {
+    state.qIndex = 0; state.answers = {};
+    startQuiz();
+  }
+});
+
+function startQuiz(){
+  showSection('quiz-section');
+  renderQuiz();
+}
+
+function showResumeModal(saved){
+  renderModal({
+    title:'Continuar de onde parou?',
+    body:'Encontramos um diagnóstico em andamento. Deseja continuar ou começar novamente?',
+    primary:{ label:'Continuar', action: () => { state.qIndex = saved.qIndex; state.answers = saved.answers; removeModal(); startQuiz(); } },
+    secondary:{ label:'Começar novamente', action: () => { clearProgress(); state.qIndex=0; state.answers={}; removeModal(); startQuiz(); } }
+  });
+}
+
+function renderModal(cfg){
+  document.getElementById('modal-root').innerHTML = `
+    <div class="modal-overlay" id="modal-overlay">
+      <div class="modal-card" role="dialog" aria-modal="true">
+        <h3 class="modal-title">${cfg.title}</h3>
+        <p class="modal-body">${cfg.body}</p>
+        <div class="modal-actions">
+          <button class="btn btn-primary" id="modal-primary">${cfg.primary.label}</button>
+          <button class="btn btn-ghost" id="modal-secondary">${cfg.secondary.label}</button>
+        </div>
+      </div>
+    </div>`;
+  document.getElementById('modal-primary').addEventListener('click', cfg.primary.action);
+  document.getElementById('modal-secondary').addEventListener('click', cfg.secondary.action);
+}
+function removeModal(){ document.getElementById('modal-root').innerHTML=''; }
+
+// ================= QUIZ =================
+
+function renderQuiz(){
+  const q = QUESTIONS[state.qIndex];
+  const total = QUESTIONS.length;
+  const pct = Math.round((state.qIndex/total)*100);
+  const container = document.getElementById('quiz');
+  container.innerHTML = `
+    <div class="quiz-card">
+      <div class="quiz-topbar"><span>Pergunta ${state.qIndex+1} de ${total}</span><span>${pct}%</span></div>
+      <div class="progress"><div class="progress-fill" style="width:${pct}%"></div></div>
+      <h2 class="quiz-q">${q.q}</h2>
+      <div class="opts" role="listbox">
+        ${q.opts.map((txt,i)=>`
+          <button class="opt${state.answers[q.id]===i?' selected':''}" type="button" data-idx="${i}">
+            <span class="radio"></span><span class="opt-text">${txt}</span>
+          </button>`).join('')}
+      </div>
+      <div class="quiz-nav">
+        ${state.qIndex>0 ? '<button class="btn btn-ghost" id="back-btn" type="button">← Voltar</button>' : ''}
+      </div>
+    </div>`;
+
+  container.querySelectorAll('.opt').forEach(btn => {
+    btn.addEventListener('click', () => selectOption(btn, q));
+  });
+  const backBtn = document.getElementById('back-btn');
+  if (backBtn) backBtn.addEventListener('click', goBack);
+}
+
+function selectOption(button, q){
+  const idx = parseInt(button.dataset.idx,10);
+  state.answers[q.id] = idx;
+  saveProgress();
+  setTimeout(() => {
+    if (state.qIndex < QUESTIONS.length - 1){
+      state.qIndex++;
+      renderQuiz();
+    } else {
+      showProcessing();
+    }
+  }, 180);
+}
+
+function goBack(){
+  if (state.qIndex > 0){ state.qIndex--; renderQuiz(); }
+}
+
+// ================= PROCESSAMENTO =================
+
+function showProcessing(){
+  showSection('processing-section');
+  const steps = [
+    'Analisando sua operação...',
+    'Comparando os principais pontos...',
+    'Identificando seus gargalos...',
+    'Montando suas prioridades...',
+    'Preparando seu plano de crescimento...'
+  ];
+  const container = document.getElementById('processing');
+  container.innerHTML = `
+    <div class="processing-wrap">
+      <h2 class="processing-title">Calculando seu diagnóstico</h2>
+      <p class="processing-subtitle">Isso leva só alguns segundos</p>
+      <div class="proc-steps">
+        ${steps.map((s,i)=>`<div class="proc-step" id="pstep-${i}"><span class="indicator"><i class="fa-solid fa-check"></i></span><span>${s}</span></div>`).join('')}
+      </div>
+      <div class="proc-progress-track"><div class="proc-progress-fill" id="proc-fill" style="width:0%"></div></div>
+    </div>`;
+
+  const nodes = steps.map((_,i)=>document.getElementById(`pstep-${i}`));
+  let i = 0;
+  // TEST_MODE: sem delays artificiais extras — avança o passo a passo o mais rápido possível.
+  // Produção (TEST_MODE=false): preserva o tempo visual normal do processamento.
+  const stepDuration = TEST_MODE ? 20 : 380;
+  const iv = setInterval(() => {
+    if (i>0) nodes[i-1].classList.remove('active');
+    if (i < nodes.length){
+      nodes[i].classList.add('active');
+      document.getElementById('proc-fill').style.width = Math.round(((i+1)/nodes.length)*100)+'%';
+      i++;
+    } else {
+      clearInterval(iv);
+      nodes.forEach(n=>{ n.classList.remove('active'); n.classList.add('done'); });
+      state.result = computeResult(state.answers);
+      if (TEST_MODE){
+        // Bypass local apenas para testes: não marca leadUnlocked, não dispara onFormSubmitted,
+        // não envia nenhuma conversão ao HubSpot. O formulário permanece intacto para TEST_MODE=false.
+        unlockDiagnosisResultTestMode(state.result);
+      } else {
+        showLeadGate(state.result);
+      }
+    }
+  }, stepDuration);
+}
+
+// ================= LEAD GATE (HubSpot) =================
+
+function showLeadGate(result){
+  showSection('lead-form-section');
+  const section = document.getElementById('lead-form-section');
+  section.innerHTML = `
+    <div class="lead-gate-card">
+      <p class="lead-gate-eyebrow">Falta pouco</p>
+      <h2 class="lead-gate-title">Preencha seus dados para ver o diagnóstico completo</h2>
+      <p class="lead-gate-lead">Seu resultado, prioridades e plano de crescimento estão prontos.</p>
+      <div id="diagnosisLeadForm">
+        <div class="lead-gate-status" id="lead-loading"><i class="fa-solid fa-spinner fa-spin"></i> Carregando formulário...</div>
+      </div>
+    </div>`;
+  initHubSpotForm();
+}
+
+function initHubSpotForm(){
+  let attempts = 0;
+  function tryCreate(){
+    attempts++;
+    if (window.hbspt && window.hbspt.forms){
+      document.getElementById('lead-loading')?.remove();
+      window.hbspt.forms.create({
+        portalId: HUBSPOT_PORTAL_ID,
+        formId: HUBSPOT_FORM_ID,
+        region: HUBSPOT_REGION,
+        target: '#diagnosisLeadForm',
+        onFormSubmitted: handleHubSpotSubmissionSuccess
+      });
+    } else if (attempts < 40){
+      setTimeout(tryCreate, 250);
+    } else {
+      renderLeadGateError();
+    }
+  }
+  tryCreate();
+}
+
+function renderLeadGateError(){
+  const wrap = document.getElementById('diagnosisLeadForm');
+  if (!wrap) return;
+  wrap.innerHTML = `
+    <div class="lead-gate-error-wrap">
+      <p class="lead-gate-error">Não foi possível carregar o formulário agora.</p>
+      <button class="btn btn-primary" id="retry-form-btn" type="button">Tentar novamente</button>
+    </div>`;
+  document.getElementById('retry-form-btn')?.addEventListener('click', initHubSpotForm);
+}
+
+function handleHubSpotSubmissionSuccess(){
+  state.leadUnlocked = true;
+  saveProgress();
+  unlockDiagnosisResult();
+}
+
+async function unlockDiagnosisResult(){
+  const section = document.getElementById('lead-form-section');
+  if (section) section.innerHTML = `<div class="lead-gate-card"><div class="lead-gate-success"><i class="fa-solid fa-circle-check"></i> Diagnóstico liberado!</div></div>`;
+  // Tenta enriquecer com IA (não bloqueia o resultado — fallback determinístico já está pronto)
+  state.aiData = await tryEnhanceWithAI(state.result);
+  setTimeout(() => {
+    renderResult(state.result, state.aiData);
+    showSection('result-section');
+  }, 400);
+}
+
+// ================= MODO DE TESTE (bypass local do lead gate) =================
+// Usado apenas quando TEST_MODE === true. Não toca leadUnlocked, não chama o HubSpot,
+// não dispara onFormSubmitted e não grava nenhum envio de formulário no localStorage.
+async function unlockDiagnosisResultTestMode(result){
+  // Arquitetura híbrida preservada: IA apenas enriquece texto; se falhar/expirar, o fallback
+  // determinístico (tryEnhanceWithAI) garante que a tela nunca fique presa aguardando IA.
+  state.aiData = await tryEnhanceWithAI(result);
+  renderResult(result, state.aiData);
+  showSection('result-section');
+}
+
+// ================= RESULTADO =================
+
+function scoreBarColor(status){
+  return ['#C0392B','#F0A500','#0072CE','#0e8b52'][status];
+}
+
+/* ============================================================
+   GRÁFICO ARANHA / RADAR (SVG nativo — reaproveitado do Diagnóstico
+   de Gestão Financeira; adaptado para as 4 dimensões do BPO)
+   Não exibe números: apenas nome da dimensão e classificação textual.
+   ============================================================ */
+const RADAR_COLORS_BPO = {
+  grid:'#D6E1F0', axis:'#B8CCEA', fillColor:'#0072CE', fillOpacity:0.18,
+  stroke:'#0072CE', point:'#002D72', pointBorder:'#FFFFFF', focus:'#41B6E6', label:'#2C2C2A'
+};
+const RADAR_DIM_LABELS_BPO = {
+  OP:['Operação e','controle'], ESC:['Produtividade','e escala'],
+  CR:['Crescimento e','retorno'], VAL:['Valor entregue','ao cliente']
+};
+let lastRadarRenderBPO = null;
+
+function svgEl(tag, attrs){
+  const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+  Object.keys(attrs || {}).forEach(k => el.setAttribute(k, attrs[k]));
+  return el;
+}
+
+function renderMaturityRadarBPO(dimScores, dimStatus){
+  const svg = document.getElementById('maturityRadarBPO');
+  if (!svg) return;
+  Array.from(svg.querySelectorAll('.radar-generated')).forEach(el => el.remove());
+
+  const width = 640, height = 560;
+  const centerX = width/2, centerY = 270, maxRadius = 190;
+  const axes = DIM_ORDER.slice();
+  const n = axes.length;
+
+  function pointFor(index, radius){
+    const angle = -Math.PI/2 + index * (2*Math.PI/n);
+    return { x: centerX + Math.cos(angle)*radius, y: centerY + Math.sin(angle)*radius, angle };
+  }
+
+  const group = svgEl('g', { class:'radar-generated' });
+
+  [1,2,3].forEach(ring => {
+    const r = maxRadius * (ring/3);
+    const pts = axes.map((_,i)=>pointFor(i,r)).map(p=>`${p.x},${p.y}`).join(' ');
+    group.appendChild(svgEl('polygon',{ points:pts, fill:'none', stroke:RADAR_COLORS_BPO.grid, 'stroke-width':'1.5' }));
+  });
+
+  axes.forEach((_,i) => {
+    const p = pointFor(i, maxRadius);
+    group.appendChild(svgEl('line',{ x1:centerX, y1:centerY, x2:p.x, y2:p.y, stroke:RADAR_COLORS_BPO.axis, 'stroke-width':'1.5' }));
+  });
+
+  const pointCoordinates = axes.map((dkey,i) => {
+    const frac = Math.max(0, Math.min(100, dimScores[dkey]||0)) / 100;
+    const p = pointFor(i, maxRadius*frac);
+    return { dkey, x:p.x, y:p.y };
+  });
+  const polygonPoints = pointCoordinates.map(p=>`${p.x},${p.y}`).join(' ');
+  group.appendChild(svgEl('polygon',{
+    points:polygonPoints, fill:RADAR_COLORS_BPO.fillColor, 'fill-opacity':String(RADAR_COLORS_BPO.fillOpacity),
+    stroke:RADAR_COLORS_BPO.stroke, 'stroke-width':'3', 'stroke-linejoin':'round'
+  }));
+
+  pointCoordinates.forEach(p => {
+    const statusTxt = statusLabel(dimStatus[p.dkey]);
+    const label = DIMENSIONS[p.dkey].title;
+    const marker = svgEl('circle', {
+      cx:p.x, cy:p.y, r:'6', fill:RADAR_COLORS_BPO.point, stroke:RADAR_COLORS_BPO.pointBorder,
+      'stroke-width':'2', class:'radar-point', tabindex:'0', role:'img',
+      'aria-label': `${label}: ${statusTxt}`
+    });
+    const title = svgEl('title', {});
+    title.textContent = `${label}: ${statusTxt}`;
+    marker.appendChild(title);
+    marker.addEventListener('mouseenter', () => marker.setAttribute('fill', RADAR_COLORS_BPO.focus));
+    marker.addEventListener('mouseleave', () => marker.setAttribute('fill', RADAR_COLORS_BPO.point));
+    marker.addEventListener('focus', () => marker.setAttribute('fill', RADAR_COLORS_BPO.focus));
+    marker.addEventListener('blur', () => marker.setAttribute('fill', RADAR_COLORS_BPO.point));
+    group.appendChild(marker);
+  });
+
+  axes.forEach((dkey,i) => {
+    const labelRadius = maxRadius + 46;
+    const p = pointFor(i, labelRadius);
+    const cosA = Math.cos(p.angle);
+    let anchor = 'middle';
+    if (cosA > 0.15) anchor = 'start';
+    else if (cosA < -0.15) anchor = 'end';
+    const text = svgEl('text', {
+      x:p.x, y:p.y, 'text-anchor':anchor, 'dominant-baseline':'middle',
+      fill:RADAR_COLORS_BPO.label, 'font-family':"'Poppins', sans-serif", 'font-size':'13'
+    });
+    const lines = RADAR_DIM_LABELS_BPO[dkey];
+    const tspan1 = svgEl('tspan', { x:p.x, dy:'-0.35em' });
+    tspan1.textContent = lines[0];
+    const tspan2 = svgEl('tspan', { x:p.x, dy:'1.15em' });
+    tspan2.textContent = lines[1];
+    text.appendChild(tspan1); text.appendChild(tspan2);
+    group.appendChild(text);
+  });
+
+  svg.appendChild(group);
+
+  const summaryEl = document.getElementById('radarAccessibleSummaryBPO');
+  if (summaryEl){
+    const items = pointCoordinates.map(p => `${DIMENSIONS[p.dkey].title}: ${statusLabel(dimStatus[p.dkey])}`);
+    summaryEl.textContent = 'Visão geral da sua operação. ' + items.join('. ') + '.';
+  }
+
+  lastRadarRenderBPO = { axes, dimScores: axes.map(d=>dimScores[d]), dimStatus: axes.map(d=>dimStatus[d]) };
+}
+
+function renderResult(r, ai){
+  const level = r.level;
+  const portfolioLabels = ['Ainda não tenho clientes','1 a 4 clientes','5 a 15 clientes','Mais de 15 clientes'];
+  const overallAnalysis = (ai && ai.overall_analysis) ? ai.overall_analysis : buildFallbackNarrative(r);
+  const closing = (ai && ai.closing_summary) ? ai.closing_summary
+    : `${level.nome} — o foco agora é ${DIMENSIONS[r.mainPriority].title.toLowerCase()}.`;
+
+  const dimensionInsights = {};
+  DIM_ORDER.forEach(dkey => {
+    const aiInsight = ai && Array.isArray(ai.dimension_insights) ? ai.dimension_insights.find(d => (d.dimension_id||'').toUpperCase().includes(dkey)) : null;
+    dimensionInsights[dkey] = (aiInsight && aiInsight.insight) ? aiInsight.insight : dimFallbackText(dkey, r.dimStatus[dkey]);
+  });
+
+  const strengthsAI = (ai && Array.isArray(ai.strengths)) ? ai.strengths : null;
+  let strengthsHtml = '';
+  if (r.hasStrongEvidence){
+    const title = strengthsAI && strengthsAI[0] ? strengthsAI[0].title : `${DIMENSIONS[r.strongestDim].title} é o seu ponto mais forte`;
+    const text = strengthsAI && strengthsAI[0] ? strengthsAI[0].explanation : dimFallbackText(r.strongestDim, r.dimStatus[r.strongestDim]);
+    strengthsHtml = `<div class="scard"><p class="scard-title">${title}</p><p class="scard-text">${text}</p></div>`;
+  }
+
+  const priorityCards = r.priorityDims.map((dkey, idx) => {
+    const aiP = ai && Array.isArray(ai.priorities) ? ai.priorities[idx] : null;
+    const fb = priorityFallback(dkey, r);
+    const title = aiP && aiP.title ? aiP.title : fb.title;
+    const identified = aiP && aiP.identified ? aiP.identified : fb.identified;
+    const why = aiP && aiP.why ? aiP.why : fb.why;
+    const actionNow = aiP && aiP.action_now ? aiP.action_now : fb.action_now;
+    return `
+      <div class="pcard${idx===0?' p1':''}">
+        <div class="pcard-head">
+          <span class="pcard-badge">Prioridade ${idx+1}</span>
+          <span class="pcard-pilar">${DIMENSIONS[dkey].title}</span>
+        </div>
+        <h3 class="pcard-title">${title}</h3>
+        <div class="pcard-blocks">
+          <div class="pblock"><p class="pblock-label">O que identificamos</p><p class="pblock-text">${identified}</p></div>
+          <div class="pblock"><p class="pblock-label">Por que isso importa</p><p class="pblock-text">${why}</p></div>
+          <div class="pblock"><p class="pblock-label">O que priorizar agora</p><p class="pblock-text">${actionNow}</p></div>
+        </div>
+      </div>`;
+  }).join('');
+
+  const plan7 = (ai && ai.growth_plan_7) || defaultPlan(r,'7');
+  const plan30 = (ai && ai.growth_plan_30) || defaultPlan(r,'30');
+  const plan90 = (ai && ai.growth_plan_90) || defaultPlan(r,'90');
+
+  const contentCards = r.selectedContentIds.map(id => {
+    const c = CONTENT_LIBRARY[id];
+    const aiReason = ai && Array.isArray(ai.content_reasons) ? ai.content_reasons.find(x=>x.content_id===id) : null;
+    const reason = aiReason && aiReason.reason ? aiReason.reason : c.reason;
+    return `
+      <div class="content-card">
+        <div class="content-card-info">
+          <p class="content-card-tag">${c.selo}</p>
+          <p class="content-card-title">${c.nome}</p>
+          <p class="content-card-reason">${reason}</p>
+        </div>
+        <a class="btn btn-secondary" href="${c.url}" target="_blank" rel="noopener">${c.cta}</a>
+      </div>`;
+  }).join('');
+
+  const niboBridge = ai && ai.nibo_bridge ? ai.nibo_bridge : {
+    title:'Transforme sua estrutura em capacidade para crescer',
+    intro:`Os pontos identificados no seu diagnóstico têm relação direta com o que o Nibo BPO oferece para operações como a sua.`,
+    bullets: r.allowedNiboCapabilities.map(c=>`${c.titulo}: ${c.texto}`)
+  };
+
+  document.getElementById('result-content').innerHTML = `
+    <section class="result-section">
+      <div class="result-header">
+        <p class="result-title">Seu diagnóstico está pronto</p>
+        <h1 class="result-level-name">${level.nome}</h1>
+        <p class="result-level-desc">${overallAnalysis}</p>
+        <div class="scale">
+          <div class="scale-track">
+            <div class="scale-fill" style="width:${r.overall}%"></div>
+            <div class="scale-marker" style="left:${r.overall}%"></div>
+          </div>
+          <div class="scale-labels">
+            <span${r.levelIdx===0?' class="current"':''}>Dependente</span>
+            <span${r.levelIdx===1?' class="current"':''}>Em estruturação</span>
+            <span${r.levelIdx===2?' class="current"':''}>Preparada</span>
+            <span${r.levelIdx===3?' class="current"':''}>Escalável</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <nav class="toc-card" aria-label="Sumário do diagnóstico">
+      <p class="toc-title">Neste diagnóstico</p>
+      <ul class="toc-list">
+        <li><a href="#sec-operacao">Sua operação</a></li>
+        <li><a href="#sec-fortes">Pontos fortes</a></li>
+        <li><a href="#sec-prioridades">Gargalos</a></li>
+        <li><a href="#sec-plano">Plano de crescimento</a></li>
+        <li><a href="#sec-conteudos">Conteúdos para você</a></li>
+      </ul>
+    </nav>
+
+    <section class="result-section" id="sec-operacao">
+      <h2 class="section-h">Como está sua operação</h2>
+      <div class="dims-grid">
+        ${DIM_ORDER.map(dkey => `
+          <div class="dim-card">
+            <div class="dim-head">
+              <span class="dim-name">${DIMENSIONS[dkey].title}</span>
+              <span class="dim-meta"><span class="dim-status-tag ${statusClass(r.dimStatus[dkey])}">${statusLabel(r.dimStatus[dkey])}</span></span>
+            </div>
+            <div class="dim-bar-track"><div class="dim-bar-fill" style="width:${r.dimScores[dkey]}%;background:${scoreBarColor(r.dimStatus[dkey])}"></div></div>
+            <p class="dim-text">${dimensionInsights[dkey]}</p>
+          </div>`).join('')}
+      </div>
+
+      <h3 class="section-h2">Visão geral da sua operação</h3>
+      <div class="radar-card">
+        <div class="radar-chart-wrap">
+          <svg id="maturityRadarBPO" class="radar-chart" viewBox="0 0 640 560" role="img" aria-labelledby="radarTitleBPO radarDescriptionBPO">
+            <title id="radarTitleBPO">Visão geral da sua operação</title>
+            <desc id="radarDescriptionBPO">Gráfico com a classificação identificada nas quatro dimensões avaliadas.</desc>
+          </svg>
+        </div>
+        <p class="radar-help">Quanto mais próximo da borda, mais estruturada está a dimensão. Os pontos próximos ao centro indicam áreas que precisam de mais atenção.</p>
+        <div id="radarAccessibleSummaryBPO" class="sr-only"></div>
+      </div>
+    </section>
+
+    ${strengthsHtml ? `
+    <section class="result-section" id="sec-fortes">
+      <h2 class="section-h">O que você já construiu bem</h2>
+      <div class="strengths">${strengthsHtml}</div>
+    </section>` : `
+    <section class="result-section" id="sec-fortes">
+      <h2 class="section-h">Sua melhor base hoje</h2>
+      <div class="strengths"><div class="scard"><p class="scard-title">${DIMENSIONS[r.strongestDim].title}</p><p class="scard-text">${dimFallbackText(r.strongestDim, r.dimStatus[r.strongestDim])}</p></div></div>
+    </section>`}
+
+    <section class="result-section" id="sec-prioridades">
+      <h2 class="section-h">O que pode estar limitando seu crescimento</h2>
+      <div class="priorities">${priorityCards}</div>
+    </section>
+
+    <section class="result-section" id="sec-plano">
+      <h2 class="section-h">Seu plano para crescer</h2>
+      <div class="plan">
+        <div class="plan-grid">
+          <div class="plan-col"><p class="plan-col-title"><span class="plan-dot"></span>Próximos 7 dias</p>${planItemsHtml(plan7)}</div>
+          <div class="plan-col"><p class="plan-col-title"><span class="plan-dot"></span>Próximos 30 dias</p>${planItemsHtml(plan30)}</div>
+          <div class="plan-col"><p class="plan-col-title"><span class="plan-dot"></span>Próximos 90 dias</p>${planItemsHtml(plan90)}</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="result-section" id="sec-conteudos">
+      <h2 class="section-h">Conteúdos recomendados</h2>
+      <div class="content-cards">${contentCards}</div>
+    </section>
+
+    <section class="result-section">
+      <div class="nibo-cta">
+        <h2 class="nibo-cta-title">Escale e centralize sua operação de BPO Financeiro com o Nibo</h2>
+        <a href="${SALES_URL}" target="_blank" rel="noopener" id="nibo-sales-btn">Falar com um especialista</a>
+      </div>
+    </section>
+  `;
+  renderMaturityRadarBPO(r.dimScores, r.dimStatus);
+  clearProgress();
+}
+
+function planItemsHtml(items){
+  return (items||[]).map(t => `<label class="plan-item"><input type="checkbox" class="plan-check"><span>${t}</span></label>`).join('');
+}
+
+function defaultPlan(r, horizon){
+  const acts = r.priorityDims.map(dkey => ACTIONS[dkey]).flat();
+  if (horizon === '7') return acts.slice(0,2).map(a=>a.titulo);
+  if (horizon === '30') return acts.slice(0,3).map(a=>`${a.titulo}: ${a.texto.split(';')[0]}.`);
+  return [`Revisar os avanços em ${DIMENSIONS[r.mainPriority].title.toLowerCase()} e ${DIMENSIONS[r.secondPriority].title.toLowerCase()}.`, `Conectar capacidade da operação a metas de crescimento da carteira.`];
+}
+
+document.addEventListener('click', (e) => {
+  const item = e.target.closest('.plan-item');
+  if (item) item.classList.toggle('checked');
+});
+
+document.getElementById('restart-btn')?.addEventListener('click', () => {
+  clearProgress();
+  state = { step:'intro', qIndex:0, answers:{}, result:null, aiData:null };
+  showSection('intro-section');
+});
+
+</script>
+</html>
